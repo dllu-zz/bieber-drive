@@ -1,0 +1,14 @@
+body,h1,h2,h3,p,quote,small,form,input,ul,li,ol,label,section {
+	margin:0;
+	padding:0;
+}
+
+body {
+	background: #333;
+}
+
+#viewport {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+}
