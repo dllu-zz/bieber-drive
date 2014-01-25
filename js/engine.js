@@ -77,6 +77,9 @@ Engine.init = function() {
     Engine.width = 1000;
     Engine.height = 600;
 
+    // load the images into the resource cache
+    Engine.loadLevelImages(0);
+
     /* I treat all devices as being Hi-DPI (i.e. a pixel ratio of 2)
     because even on normal displays, this looks better as it is like
     anti-aliasing. */
@@ -96,6 +99,31 @@ Engine.init = function() {
     // start the updates
     Engine.update();
 }
+
+Engine.loadLevelImages = function(n){
+    Engine.resourceCache = {};
+    function load(url){
+        if (resourceCache[url]){
+            return resourceCache[url];
+        }
+        else {
+            var img = new Image();
+            img.onload = function(){
+                resourceCache[url] = img;
+            }
+        }
+        img.src = url;
+    }
+    function get(url){
+        return resourceCache[url];
+    }
+    for (var k in images[n]){
+        for (var orien in images[n][k]){
+            load(images[n][k][orien]);
+        }
+    }
+}
+
 
 Engine.level = function(n) {
     // Level up to level n
@@ -155,12 +183,16 @@ Engine.draw = function() {
     Engine.ctx.beginPath();
     switch (Engine.player.facing){
         case 0:
+            Engine.ctx.drawImage(Engine.player.topImage);
         break;
         case 1:
+            Engine.ctx.drawImage(Engine.player.rightImage);
         break;
         case 2:
+            Engine.ctx.drawImage(Engine.player.bottomImage);
         break;
         case 3:
+            Engine.ctx.drawImage(Engine.player.leftImage);
         break;
         default: console.log("MOTHERFUCKING GARBAGE PIECE OF HELL FUCKING SHIT");
     }
