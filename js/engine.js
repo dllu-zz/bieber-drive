@@ -162,18 +162,22 @@ Engine.draw = function() {
         break;
         case 3:
         break;
-        default console.log("MOTHERFUCKING GARBAGE PIECE OF HELL FUCKING SHIT");
+        default: console.log("MOTHERFUCKING GARBAGE PIECE OF HELL FUCKING SHIT");
     }
     Engine.ctx.arc(Engine.player.x, Engine.player.y, 5, 0, Math.PI*2, true);
     Engine.ctx.fillStyle = '#58f';
     Engine.ctx.fill();
 
     // draw each explosion
-    // draw 
+    // draw npcs
 }
 
-Engine.hitTest = function(point, polygon) {
-    return VisibilityPolygon.inPolygon(point, polygon);
+Engine.hitTest = function(x, y) {
+    if(!VisibilityPolygon.inPolygon([x,y], Engine.poly[0])) return true;
+    for(var i=1, _i=Engine.poly.length; i<_i; i++) {
+        if(VisibilityPolygon.inPolygon([x,y], Engine.poly[i])) return true;
+    }
+    return false;
 }
 
 Engine.dist = function(ax, ay, bx, by) {
