@@ -152,7 +152,6 @@ Engine.draw = function() {
         Engine.ctx.fill();
     }
     // draw the player
-    Engine.ctx.beginPath();
     switch (Engine.player.facing){
         case 0:
         break;
@@ -164,12 +163,19 @@ Engine.draw = function() {
         break;
         default: console.log("MOTHERFUCKING GARBAGE PIECE OF HELL FUCKING SHIT");
     }
+    Engine.ctx.beginPath();
     Engine.ctx.arc(Engine.player.x, Engine.player.y, 5, 0, Math.PI*2, true);
     Engine.ctx.fillStyle = '#58f';
     Engine.ctx.fill();
 
     // draw each explosion
     // draw npcs
+    for(var i=0, _i=Engine.npc.length; i<_i; i++) {
+        Engine.ctx.beginPath();
+        Engine.ctx.arc(Engine.npc[i].x, Engine.npc[i].y, 5, 0, Math.PI*2, true);
+        Engine.ctx.fillStyle = '#f30';
+        Engine.ctx.fill();
+    }
 }
 
 Engine.hitTest = function(x, y) {
