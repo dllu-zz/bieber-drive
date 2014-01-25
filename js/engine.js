@@ -128,5 +128,5 @@ Engine.hitTest = function(x, y) {
 }
 
 Engine.randInt = function(lo, hi) {
-	return Math.floor(Math.random() * (hi - lo)) + lo;
+	return Math.floor(Math.random() * (hi - lo + 1)) + lo;
 }
