@@ -1,7 +1,7 @@
 
 
 var requestAnimFrame = 
-    window.requestAnimFrame || 
+    window.requestAnimationFrame || 
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame ||
     function(callback, element) { setTimeout(callback, 1000/60); };
@@ -161,7 +161,7 @@ Engine.draw = function() {
     // draw 
 }
 
-Engine.collide = function(point, polygon) {
+Engine.hitTest = function(point, polygon) {
     return VisibilityPolygon.inPolygon(point, polygon);
 }
 
@@ -169,3 +169,6 @@ Engine.dist = function(ax, ay, bx, by) {
     return Math.sqrt((ax-=bx)*ax + (ay-=by)*ay);
 }
 
+Engine.randInt = function(lo, hi) {
+	return Math.floor(Math.random() * (hi - lo + 1)) + lo;
+}
