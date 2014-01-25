@@ -19,11 +19,13 @@ function Player(x,y) {
 
 	this.update = function() {
 		// NEED TO DETECT FOR COLLISIONS
-		if ((this.flag_up && !this.flag_down) || (!this.flag_up && this.flag_down)) {
-			this.y += (this.flag_up ? -1 : 1);
+		var vert = (this.flag_up && !this.flag_down) || (!this.flag_up && this.flag_down);
+		var horz = (this.flag_left && !this.flag_right) || (!this.flag_left && this.flag_right);
+		if (vert) {
+			this.y += (this.flag_up ? -1 : 1) * (horz ? Math.sqrt(0.5) : 1);
 		}
-		if ((this.flag_left && !this.flag_right) || (!this.flag_left && this.flag_right)) {
-			this.x += (this.flag_left ? -1 : 1);
+		if (horz) {
+			this.x += (this.flag_left ? -1 : 1) * (vert ? Math.sqrt(0.5) : 1);
 		}
 	}
 }
