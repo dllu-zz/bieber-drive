@@ -21,11 +21,21 @@ function Player(x,y) {
 		// NEED TO DETECT FOR COLLISIONS
 		var vert = (this.flag_up && !this.flag_down) || (!this.flag_up && this.flag_down);
 		var horz = (this.flag_left && !this.flag_right) || (!this.flag_left && this.flag_right);
-		if (vert) {
-			this.y += (this.flag_up ? -1 : 1) * (horz ? Math.sqrt(0.5) : 1);
-		}
-		if (horz) {
-			this.x += (this.flag_left ? -1 : 1) * (vert ? Math.sqrt(0.5) : 1);
+		var nx, ny;
+
+		if (vert)
+			ny = this.y + ((this.flag_up ? -1 : 1) * (horz ? Math.sqrt(0.5) : 1));
+		else
+			ny = this.y;
+
+		if (horz)
+			nx = this.x + ((this.flag_left ? -1 : 1) * (vert ? Math.sqrt(0.5) : 1));
+		else
+			nx = this.x;
+
+		if (!Engine.hitTest(nx, ny)) {
+			this.x = nx;
+			this.y = ny;
 		}
 	}
 }
