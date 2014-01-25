@@ -63,7 +63,7 @@ Engine.update = function() {
     }
 
     // level up
-    if(Engine.dist(Engine.player.x, Engine.player.y, Engine.goal.x, Engine.goal.y) < 30) {
+    if(Engine.dist(Engine.player.x, Engine.player.y, Engine.goal.x, Engine.goal.y) < 5) {
         Engine.level(Engine.currentlevel+1);
     }
 
@@ -105,7 +105,7 @@ Engine.level = function(n) {
     // check if game has been beaten
     if(n>=levels.length) {
         $('#announce').text("Win");
-        Engine.$viewport.css({'display':'block'});
+        Engine.$viewport.css({'display':'none'});
         Engine.running = false;
         return;
     }
