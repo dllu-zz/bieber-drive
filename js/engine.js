@@ -106,6 +106,7 @@ Engine.level = function(n) {
     if(n>=levels.length) {
         $('#announce').text("Win");
         Engine.running = false;
+        return;
     }
 
     // pause the engine to indicate the level
