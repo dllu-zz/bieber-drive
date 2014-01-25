@@ -153,6 +153,17 @@ Engine.draw = function() {
     }
     // draw the player
     Engine.ctx.beginPath();
+    switch (Engine.player.facing){
+        case 0:
+        break;
+        case 1:
+        break;
+        case 2:
+        break;
+        case 3:
+        break;
+        default console.log("MOTHERFUCKING GARBAGE PIECE OF HELL FUCKING SHIT");
+    }
     Engine.ctx.arc(Engine.player.x, Engine.player.y, 5, 0, Math.PI*2, true);
     Engine.ctx.fillStyle = '#58f';
     Engine.ctx.fill();
