@@ -41,7 +41,7 @@ Engine.update = function() {
     while(Engine.grenades.length>0 && Engine.grenades[0].t <=0) {
         // compute explosion, remove grenade from the list
         var boom = {
-            poly:VisibilityPolygon.compute([grenades[0].x, grenades[0].y], Engine.world),
+            poly:VisibilityPolygon.compute([grenades[0].x, grenades[0].y], Engine.seg),
             t: 30
         }
         Engine.explosions.push(boom);
@@ -74,10 +74,18 @@ Engine.init = function() {
     Engine.$viewport = $('#viewport');
     Engine.viewport = Engine.$viewport[0];
     Engine.ctx = viewport.getContext('2d');
-    Engine.width = window.innerWidth;
-    Engine.height = window.innerHeight;
-    // set the size of the canvas
-    Engine.$viewport.css({'height':Engine.height+'px', 'width':Engine.width+'px'});
+    Engine.width = 1000;
+    Engine.height = 600;
+
+    /* I treat all devices as being Hi-DPI (i.e. a pixel ratio of 2)
+    because even on normal displays, this looks better as it is like
+    anti-aliasing. */
+    Engine.viewport.width = Engine.width * 2;
+    Engine.viewport.height = Engine.height * 2;
+
+    Engine.viewport.style.width = Engine.width + 'px';
+    Engine.viewport.style.height = Engine.height + 'px';
+    Engine.ctx.scale(2, 2);
 
     // set up the new player
     Engine.player = new Player(0,0);
@@ -95,6 +103,10 @@ Engine.level = function(n) {
 
     // set the current level
     Engine.currentlevel = n;
+
+    // polygons
+    Engine.poly = levels[n].poly;
+    Engine.seg = VisibilityPolygon.convertToSegments(Engine.poly)
 
     // set the position of the player
     Engine.player.x = levels[n].start[0];
@@ -116,10 +128,44 @@ Engine.level = function(n) {
 Engine.draw = function() {
     Engine.ctx.beginPath();
     Engine.ctx.rect(0, 0, Engine.width, Engine.height);
-    Engine.ctx.fillStyle = "#333";
+    Engine.ctx.fillStyle = '#222';
     Engine.ctx.fill();
+    // draw the world
+    // draw the first polygon
+    var polygon = Engine.poly[0];
+    Engine.ctx.beginPath();
+    Engine.ctx.moveTo(polygon[0][0], polygon[0][1]);
+    for(var k=1, l=polygon.length; k<l; k++) {
+        Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
+    }
+    Engine.ctx.fillStyle = '#888';
+    Engine.ctx.fill();
+    // draw the other polygons
+    for(var i=1, j=Engine.poly.length; i<j; i++) {
+        var polygon = Engine.poly[i];
+        Engine.ctx.beginPath();
+        Engine.ctx.moveTo(polygon[0][0], polygon[0][1]);
+        for(var k=1, l=polygon.length; k<l; k++) {
+            Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
+        }
+        Engine.ctx.fillStyle = '#222';
+        Engine.ctx.fill();
+    }
     // draw the player
+    Engine.ctx.beginPath();
+    Engine.ctx.arc(Engine.player.x, Engine.player.y, 5, 0, Math.PI*2, true);
+    Engine.ctx.fillStyle = '#58f';
+    Engine.ctx.fill();
+
     // draw each explosion
     // draw 
+}
+
+Engine.collide = function(point, polygon) {
+    return VisibilityPolygon.inPolygon(point, polygon);
+}
+
+Engine.dist = function(ax, ay, bx, by) {
+    return Math.sqrt((ax-=bx)*ax + (ay-=by)*ay);
 }
 
