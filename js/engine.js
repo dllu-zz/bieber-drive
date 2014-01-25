@@ -105,6 +105,7 @@ Engine.level = function(n) {
     // check if game has been beaten
     if(n>=levels.length) {
         $('#announce').text("Win");
+        Engine.$viewport.css({'display':'block'});
         Engine.running = false;
         return;
     }
