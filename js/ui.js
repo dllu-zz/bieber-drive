@@ -1,24 +1,24 @@
 // This file includes all the events..
 
-$(document).keydown(function(event) {
+$(document).keypress(function(event) {
 	switch (event.keyCode) {
 		case 32:
 			console.log("Spacebar was pressed!");
 			break;
 		case 37:
-			console.log("Left was pressed!");
+			Engine.player.moveLeft();
 			break;
 		case 38:
 			// Up
-			console.log("Up was pressed!");
+			Engine.player.moveUp();
 			break;
 		case 39:
 			// Right
-			console.log("Right was pressed!");
+			Engine.player.moveRight();
 			break;
 		case 40:
 			// Down
-			console.log("Down was pressed!");
+			Engine.player.moveDown();
 			break;
 		default:
 			console.log("Key pressed: ", event);
