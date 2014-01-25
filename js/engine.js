@@ -6,7 +6,9 @@ var requestAnimFrame =
     window.mozRequestAnimationFrame ||
     function(callback, element) { setTimeout(callback, 1000/60); };
 
-$(document).ready(Engine.init)
+$(document).ready(function() {
+    Engine.init()
+});
 
 function Engine(){}
 
@@ -36,7 +38,7 @@ Engine.update = function() {
     }
 
     // for each exploding grenade, we have to make it explode and kill all NPCs in the vicinity
-    while(Engine.grenades[0].t <=0) {
+    while(Engine.grenades.length>0 && Engine.grenades[0].t <=0) {
         // compute explosion, remove grenade from the list
         var boom = {
             poly:VisibilityPolygon.compute([grenades[0].x, grenades[0].y], Engine.world),
@@ -55,7 +57,7 @@ Engine.update = function() {
     }
 
     // remove all expired explosions
-    while(Engine.explosions[0].t <=0) {
+    while(Engine.explosions.length>0 && Engine.explosions[0].t <=0) {
         Engine.explosions.shift();
     }
     /*
@@ -68,13 +70,22 @@ Engine.update = function() {
 }
 
 Engine.init = function() {
+    // set up the canvas
     Engine.$viewport = $('#viewport');
-    Engine.viewport = $viewport[0];
+    Engine.viewport = Engine.$viewport[0];
     Engine.ctx = viewport.getContext('2d');
-    $viewport.css({'height':window.innerHeight+'px', 'width':window.innerWidth+'px'});
+    Engine.width = window.innerWidth;
+    Engine.height = window.innerHeight;
+    // set the size of the canvas
+    Engine.$viewport.css({'height':Engine.height+'px', 'width':Engine.width+'px'});
 
+    // set up the new player
     Engine.player = new Player(0,0);
+
+    // initialize first level
     Engine.level(0);
+
+    // start the updates
     Engine.update();
 }
 
@@ -92,7 +103,7 @@ Engine.level = function(n) {
     // clear the list of NPCs
     Engine.npc = []; // list of Npc objects
     for(var i=0, _i=levels[n].npc.length; i<_i; i++) {
-        Engine.npc.push(new Npc(levels[n].npc[i][0], levels[n].npc[i][1], player.aggression));
+        Engine.npc.push(new Npc(levels[n].npc[i][0], levels[n].npc[i][1], Engine.player.aggression));
     }
 
     // clear the list of grenades
@@ -104,7 +115,7 @@ Engine.level = function(n) {
 
 Engine.draw = function() {
     Engine.ctx.beginPath();
-    Engine.ctx.rect(0, 0, width, height);
+    Engine.ctx.rect(0, 0, Engine.width, Engine.height);
     Engine.ctx.fillStyle = "#333";
     Engine.ctx.fill();
     // draw the player
