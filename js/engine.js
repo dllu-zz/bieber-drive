@@ -15,7 +15,8 @@ function Engine(){}
 Engine.update = function() {
     // request the next update cycle
     requestAnimFrame(Engine.update);
-
+    // check if engine is running
+    if(!Engine.running) return;
     // update the player
     Engine.player.update();
 
@@ -60,12 +61,12 @@ Engine.update = function() {
     while(Engine.explosions.length>0 && Engine.explosions[0].t <=0) {
         Engine.explosions.shift();
     }
-    /*
+
     // level up
-    if(dist(Engine.player.x, Engine.player.y, Engine.goal.x, Engine.goal.y) < 30) {
+    if(Engine.dist(Engine.player.x, Engine.player.y, Engine.goal.x, Engine.goal.y) < 30) {
         Engine.level(Engine.currentlevel+1);
     }
-    */
+
     Engine.draw();
 }
 
@@ -129,8 +130,31 @@ Engine.level = function(n) {
     // Level up to level n
     // resets the player, weapon, and all NPCs
 
+    // check if game has been beaten
+    if(n>=levels.length) {
+        $('#announce').text("Win");
+        Engine.$viewport.css({'display':'block'});
+        Engine.running = false;
+        return;
+    }
+
+    // pause the engine to indicate the level
+    Engine.running = false;
+    Engine.$viewport.css({'display':'none'});
+    $('#level').text(n+1);
+    window.setTimeout(function(){
+        Engine.$viewport.css({'display':'block'});
+        Engine.running = true;
+    }, 2000);
+
     // set the current level
     Engine.currentlevel = n;
+
+    // goal
+    Engine.goal = {
+        x:levels[n].goal[0],
+        y:levels[n].goal[1]
+    };
 
     // polygons
     Engine.poly = levels[n].poly;
@@ -180,7 +204,6 @@ Engine.draw = function() {
         Engine.ctx.fill();
     }
     // draw the player
-    Engine.ctx.beginPath();
     switch (Engine.player.facing){
         case 0:
             Engine.ctx.drawImage(Engine.player.topImage);
@@ -196,12 +219,26 @@ Engine.draw = function() {
         break;
         default: console.log("MOTHERFUCKING GARBAGE PIECE OF HELL FUCKING SHIT");
     }
+    Engine.ctx.beginPath();
     Engine.ctx.arc(Engine.player.x, Engine.player.y, 5, 0, Math.PI*2, true);
     Engine.ctx.fillStyle = '#58f';
     Engine.ctx.fill();
 
     // draw each explosion
+
     // draw npcs
+    for(var i=0, _i=Engine.npc.length; i<_i; i++) {
+        Engine.ctx.beginPath();
+        Engine.ctx.arc(Engine.npc[i].x, Engine.npc[i].y, 5, 0, Math.PI*2, true);
+        Engine.ctx.fillStyle = '#f30';
+        Engine.ctx.fill();
+    }
+
+    // draw goal
+    Engine.ctx.beginPath();
+    Engine.ctx.arc(Engine.goal.x, Engine.goal.y, 5, 0, Math.PI*2, true);
+    Engine.ctx.fillStyle = '#3f3';
+    Engine.ctx.fill();
 }
 
 Engine.hitTest = function(x, y) {

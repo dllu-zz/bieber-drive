@@ -11,23 +11,31 @@ function Player(x,y) {
 	this.aggression = 0;
 	this.lives = 3;
 	this.facing = FACING_RIGHT;
-	this.update = function() {
 
-	}
-	this.moveRight = function() {
-		this.facing = FACING_RIGHT;
-		this.x += 2;
-	}
-	this.moveLeft = function() {
-		this.facing = FACING_LEFT;
-		this.x -= 2;
-	}
-	this.moveUp = function() {
-		this.facing = FACING_UP;
-		this.y -= 2;
-	}
-	this.moveDown = function() {
-		this.facing = FACING_DOWN;
-		this.y += 2;
+	this.flag_up = false;
+	this.flag_down = false;
+	this.flag_right = false;
+	this.flag_left = false;
+
+	this.update = function() {
+		// NEED TO DETECT FOR COLLISIONS
+		var vert = (this.flag_up && !this.flag_down) || (!this.flag_up && this.flag_down);
+		var horz = (this.flag_left && !this.flag_right) || (!this.flag_left && this.flag_right);
+		var nx, ny;
+
+		if (vert)
+			ny = this.y + ((this.flag_up ? -1 : 1) * (horz ? Math.sqrt(0.5) : 1));
+		else
+			ny = this.y;
+
+		if (horz)
+			nx = this.x + ((this.flag_left ? -1 : 1) * (vert ? Math.sqrt(0.5) : 1));
+		else
+			nx = this.x;
+
+		if (!Engine.hitTest(nx, ny)) {
+			this.x = nx;
+			this.y = ny;
+		}
 	}
 }

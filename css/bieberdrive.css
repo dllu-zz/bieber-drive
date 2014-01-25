@@ -5,6 +5,19 @@ body,h1,h2,h3,p,quote,small,form,input,ul,li,ol,label,section {
 
 body {
 	background: #333;
+	font-family: monospace;
+}
+
+#announce {
+	width: 1000px;
+	height: 600px;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	line-height: 600px;
+	text-align: center;
+	font-size: 100px;
+	color: #eee;
 }
 
 #viewport {

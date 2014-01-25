@@ -13,8 +13,8 @@ function Npc(x,y,a) {
 	this.update = function() {
 
 		var cspeed = Math.abs(this.xdir) + Math.abs(this.ydir) == 2 ? Math.sqrt(this.speed/2) : this.speed;
-		var nx = x + cspeed * this.xdir;
-		var ny = y + cspeed * this.ydir;
+		var nx = this.x + cspeed * this.xdir;
+		var ny = this.y + cspeed * this.ydir;
 		
 		if(Engine.hitTest(nx, ny)) {
 			this.xdir = Engine.randInt(-1, 1);
@@ -24,8 +24,8 @@ function Npc(x,y,a) {
 			}
 		}
 		else {
-			x = nx;
-			y = ny;
+			this.x = nx;
+			this.y = ny;
 		}
 
 	}
