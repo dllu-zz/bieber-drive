@@ -123,3 +123,10 @@ Engine.draw = function() {
     // draw 
 }
 
+Engine.hitTest = function(x, y) {
+	// todo return boolean
+}
+
+Engine.randInt = function(lo, hi) {
+	return Math.floor(Math.random() * (hi - lo)) + lo;
+}
