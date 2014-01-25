@@ -104,19 +104,19 @@ Engine.init = function() {
 Engine.loadLevelImages = function(n){
     Engine.resourceCache = {};
     function load(url){
-        if (resourceCache[url]){
-            return resourceCache[url];
+        if (Engine.resourceCache[url]){
+            return Engine.resourceCache[url];
         }
         else {
             var img = new Image();
             img.onload = function(){
-                resourceCache[url] = img;
+                Engine.resourceCache[url] = img;
             }
         }
         img.src = url;
     }
     function get(url){
-        return resourceCache[url];
+        return Engine.resourceCache[url];
     }
     for (var k in images[n]){
         for (var orien in images[n][k]){
@@ -206,23 +206,23 @@ Engine.draw = function() {
     // draw the player
     switch (Engine.player.facing){
         case 0:
-            Engine.ctx.drawImage(Engine.player.topImage);
+            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.top], Engine.player.x, Engine.player.y);
         break;
         case 1:
-            Engine.ctx.drawImage(Engine.player.rightImage);
+            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.right], Engine.player.x, Engine.player.y);
         break;
         case 2:
-            Engine.ctx.drawImage(Engine.player.bottomImage);
+            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.bottom], Engine.player.x, Engine.player.y);
         break;
         case 3:
-            Engine.ctx.drawImage(Engine.player.leftImage);
+            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.left], Engine.player.x, Engine.player.y);
         break;
         default: console.log("MOTHERFUCKING GARBAGE PIECE OF HELL FUCKING SHIT");
     }
-    Engine.ctx.beginPath();
-    Engine.ctx.arc(Engine.player.x, Engine.player.y, 5, 0, Math.PI*2, true);
-    Engine.ctx.fillStyle = '#58f';
-    Engine.ctx.fill();
+   // Engine.ctx.beginPath();
+   // Engine.ctx.arc(Engine.player.x, Engine.player.y, 5, 0, Math.PI*2, true);
+   // Engine.ctx.fillStyle = '#58f';
+   // Engine.ctx.fill();
 
     // draw each explosion
 
