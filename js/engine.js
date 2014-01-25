@@ -170,5 +170,5 @@ Engine.dist = function(ax, ay, bx, by) {
 }
 
 Engine.randInt = function(lo, hi) {
-	return Math.floor(Math.random() * (hi - lo + 1)) + lo;
+	return ~~(Math.random() * (hi - lo + 1)) + lo;
 }
