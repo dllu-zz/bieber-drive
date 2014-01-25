@@ -18,9 +18,11 @@ Engine.update = function() {
     }
     for(var i=0, _i=Engine.grenades.length; i<_i; i++) {
         Engine.grenades[i].update();
-        if(Engine.grenades[i].t <=0) {
-            // compute explosion, remove grenade from the list
-        }
+    }
+    while(Engine.grenades[0].t <=0) {
+        // compute explosion, remove grenade from the list
+        Engine.explosions.push(VisibilityPolygon.compute([grenades[0].x, grenades[0].y], Engine.world))
+        Engine.grenades.shift();
     }
     /*
     // level up
@@ -42,11 +44,14 @@ Engine.level = function(n) {
     // resets the player, weapon, and all NPCs
     Engine.currentlevel = n;
     Engine.player = new Player();
-    Engine.npc = [];
-    Engine.grenades = [];
+    Engine.npc = []; // list of Npc objects
+    Engine.grenades = []; // list of Weapon objects
+    Engine.explosions = []; // list of polygons
 }
 
 Engine.draw = function() {
-    
+    // 
+    // draws the player
+
 }
 
