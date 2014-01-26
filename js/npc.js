@@ -32,7 +32,7 @@ function Npc(x,y,a) {
             }
 
             if (Engine.hitObject(this, Engine.player)) {
-            	Engine.player.onTouch();
+            	Engine.player.onTouchEnemy();
             }
         } else if(this.deadness<60) {
             this.deadness++;

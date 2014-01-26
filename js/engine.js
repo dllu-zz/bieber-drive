@@ -52,7 +52,7 @@ Engine.update = function() {
         }
         // Remove health of player
         if (VisibilityPolygon.inPolygon([Engine.player.x, Engine.player.y], Engine.explosions[i].poly))
-            Engine.player.health--;
+            Engine.player.onTouchExplosion();
 
         Engine.grenades[i].active = false;
     }
@@ -107,7 +107,7 @@ Engine.init = function() {
     Engine.player = new Player(0,0);
 
     // initialize first level
-    Engine.level(3);
+    Engine.level(0);
 
     // start the updates
     Engine.update();
@@ -130,8 +130,13 @@ Engine.level = function(n) {
     // pause the engine to indicate the level
     Engine.running = false;
     Engine.$viewport.css({'display':'none'});
-    Engine.$player.css({'display':'none'});
-    $('#level').text(n+1);
+
+    var level_text = "Level " + (n+1);
+    if ("title" in levels[n]) {
+        level_text = levels[n].title;
+    }
+    $('#announce').text(level_text);
+    //$('#level').text(n+1);
     window.setTimeout(function(){
         Engine.$viewport.css({'display':'block'});
         Engine.$player.css({'display':'block'});
@@ -302,7 +307,8 @@ Engine.draw = function() {
     Engine.ctx.strokeWidth = '1px';
     Engine.ctx.stroke();
 
-    $("#health").html(Engine.player.health);
+    $("#lives").html("Lives: " + Engine.player.lives);
+    $("#health").html("Health: " + Engine.player.health.toFixed(1));
 }
 
 Engine.hitTest = function(x, y) {

@@ -8,6 +8,8 @@ var FACING_SE = 5;
 var FACING_SW = 6;
 var FACING_NW = 7;
 
+var PLAYER_MAX_HEALTH = 100;
+
 function Player(x,y) {
     // Spawns a Player at x,y
     this.x = x;
@@ -15,7 +17,7 @@ function Player(x,y) {
     this.size = SPRITE_SIZE;
     this.aggression = 0;
     this.lives = 3;
-    this.health = 100;
+    this.health = PLAYER_MAX_HEALTH;
     this.facing = FACING_E;
 
     this.flag_up = false;
@@ -31,8 +33,8 @@ function Player(x,y) {
     }
 
     this.update = function() {
-        if (this.health == 0)
-            Engine.die == true;
+        /*if (this.health == 0)
+            Engine.die == true;*/
         
         var vert = (this.flag_up && !this.flag_down) || (!this.flag_up && this.flag_down);
         var horz = (this.flag_left && !this.flag_right) || (!this.flag_left && this.flag_right);
@@ -70,7 +72,24 @@ function Player(x,y) {
         }
     }
 
-    this.onTouch = function() {
-        this.health -= 1
+    this.loseHealth = function(val) {
+        this.health -= val;
+        if (this.health <= 0) {
+            this.onLoseLife();
+        }
+    }
+
+    this.onLoseLife = function() {
+        this.lives -= 1;
+        this.health = PLAYER_MAX_HEALTH;
+        Engine.level(Engine.currentlevel);
+    }
+
+    this.onTouchEnemy = function() {
+        this.loseHealth(1);
+    }
+
+    this.onTouchExplosion = function() {
+        this.loseHealth(1.5);
     }
 }
