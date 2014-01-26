@@ -106,15 +106,6 @@ Engine.update = function() {
         Engine.level(Engine.currentlevel+1);
         Engine.win = false;
     }
-    if(Engine.player.health<=0) {
-        Engine.die = true;
-    }
-    if(Engine.die) {
-        $('#announce').text("lol u ded");
-        Engine.$viewport.css({'display':'none'});
-        Engine.$player.css({'display':'none'});
-        Engine.running = false;
-    }
     Engine.draw();
 }
 
@@ -157,6 +148,15 @@ Engine.level = function(n) {
     // check if game has been beaten
     if(n>=levels.length) {
         $('#announce').text("win");
+        Engine.$viewport.css({'display':'none'});
+        Engine.$player.css({'display':'none'});
+        Engine.running = false;
+        return;
+    }
+
+    // check if user has lost
+    if(Engine.die) {
+        $('#announce').text('lol u ded');
         Engine.$viewport.css({'display':'none'});
         Engine.$player.css({'display':'none'});
         Engine.running = false;

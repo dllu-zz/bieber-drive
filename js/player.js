@@ -104,6 +104,9 @@ function Player(x,y) {
 
     this.onLoseLife = function() {
         this.lives -= 1;
+        if(this.lives <= 0) {
+            Engine.die = true;
+        }
         this.health = PLAYER_MAX_HEALTH;
         Engine.level(Engine.currentlevel);
     }

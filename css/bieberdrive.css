@@ -4,8 +4,15 @@ body,h1,h2,h3,p,quote,small,form,input,ul,li,ol,label,section {
 }
 
 body {
-	background: #333;
+	background: #222;
 	font-family: monospace;
+}
+
+#container {
+	position: relative;
+	width: 1000px;
+	height: 650px;
+	margin: auto;
 }
 
 #announce {
