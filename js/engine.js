@@ -203,43 +203,36 @@ Engine.draw = function() {
         Engine.ctx.fill();
     }
 
-    function renderPlayer(direction, angle){
-            Engine.ctx.save();
-            Engine.ctx.translate(Engine.player.x, Engine.player.y);
-            Engine.ctx.rotate(angle);
-            Engine.ctx.translate(-Engine.player.x, -Engine.player.y);
+    function renderPlayer(direction){
             var img = Engine.resourceCache[images[Engine.currentlevel].character[direction]];
             Engine.ctx.drawImage(img, Engine.player.x, Engine.player.y);
-            Engine.ctx.restore();
     }
-
-    //renderPlayer()
 
     // draw the player
     switch (Engine.player.facing){
         case FACING_N:
-            renderPlayer("N", 0);
+            renderPlayer("N");
         break;
         case FACING_E:
-            renderPlayer("E", 0);
+            renderPlayer("E");
         break;
         case FACING_S:
-            renderPlayer("S", 0);
+            renderPlayer("S");
         break;
         case FACING_W:
-            renderPlayer("W", 0);
+            renderPlayer("W");
         break;
         case FACING_NE:
-            renderPlayer("NE", 270);
+            renderPlayer("NE");
         break;
         case FACING_SE:
-            renderPlayer("SE", 45*Math.PI/180);
+            renderPlayer("SE");
         break;
         case FACING_SW:
-            renderPlayer("SW", -45*Math.PI/180);
+            renderPlayer("SW");
         break;
         case FACING_NW:
-            renderPlayer("NW", 45*Math.PI/180);
+            renderPlayer("NW");
         break;
         default: console.log("MOTHERFUCKING GARBAGE PIECE OF HELL FUCKING SHIT");
     }
