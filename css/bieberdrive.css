@@ -62,3 +62,13 @@ body {
 	color: white;
 
 }
+
+#healthbar {
+	position: absolute;
+	top: 605px;
+	left: 0px;
+	background-color: #58f;
+	height: 10px;
+	width: 100px;
+	transition: width 0.2s ease;
+}

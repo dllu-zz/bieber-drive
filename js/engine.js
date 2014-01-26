@@ -166,6 +166,7 @@ Engine.level = function(n) {
     // pause the engine to indicate the level
     Engine.running = false;
     Engine.$viewport.css({'display':'none'});
+    Engine.$player.css({'display':'none'});
 
     var level_text = "Level " + (n+1);
     if ("title" in levels[n]) {
@@ -357,6 +358,7 @@ Engine.draw = function() {
 
     $("#lives").html("Lives: " + Engine.player.lives);
     $("#health").html("Health: " + Engine.player.health.toFixed(1));
+    $('#healthbar').css({'width': (Engine.player.health/PLAYER_MAX_HEALTH*Engine.width)+'px'})
 }
 
 Engine.hitTest = function(x, y) {
