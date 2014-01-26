@@ -19,7 +19,19 @@ var mode = 0;
 $(document).ready(function(){
   Engine.init()
 });
+var history = [];
 function Engine(){}
+Engine.load = function(s) {
+    var hmm = $.parseJSON(s);
+    Engine.poly = hmm.poly;
+    Engine.player.x = hmm.start[0];
+    Engine.player.y = hmm.start[1];
+    Engine.goal.x = hmm.goal[0];
+    Engine.goal.y = hmm.goal[1];
+    Engine.npc = hmm.npc;
+    Engine.segs = VisibilityPolygon.convertToSegments(Engine.poly);
+    $('#levelcode').text(s);
+}
 Engine.init = function() {
     // set up the canvas
     Engine.$viewport = $('#viewport');
@@ -59,13 +71,19 @@ Engine.init = function() {
             case 3:
                 Engine.goal.x = x, Engine.goal.y = y; break;
         }
-        $('#levelcode').text(JSON.stringify({
+        var hmm = JSON.stringify({
             poly:Engine.poly, start:[Engine.player.x, Engine.player.y], goal:[Engine.goal.x, Engine.goal.y], npc:Engine.npc
-        }))
+        });
+        $('#levelcode').text(hmm)
+        history.push(hmm);
     });
     Engine.$viewport.mousemove(function(event) {
         var x = event.clientX, y = event.clientY;
-        Engine.explosions = [VisibilityPolygon.compute([x,y],Engine.segs)]
+        try{
+            Engine.explosions = [VisibilityPolygon.compute([x,y],Engine.segs)]
+        } catch(err) {
+            Engine.explosions = [];
+        }
     });
     $(document).keydown(function(event) {
         var w = event.which;
@@ -79,6 +97,10 @@ Engine.init = function() {
             case 88: mode = 1; break;
             case 67: mode = 2; break;
             case 86: mode = 3; break;
+            case 66: 
+                history.pop();
+                Engine.load(history[history.length-1]);
+                break;
         }
     });
     Engine.draw();
@@ -88,7 +110,7 @@ Engine.draw = function() {
     requestAnimFrame(Engine.draw);
     Engine.ctx.beginPath();
     Engine.ctx.rect(0, 0, Engine.width, Engine.height);
-    Engine.ctx.fillStyle = '#222';
+    Engine.ctx.fillStyle = '#333';
     Engine.ctx.fill();
     // draw the world
     // draw the first polygon
@@ -148,7 +170,7 @@ Engine.draw = function() {
   </head>
   <body>
     <canvas id="viewport">Use a better browser thx.</canvas>
-    <p style="margin-top:620px; color: #eee">z: draw polygon; x: place player; c: add npc; v: place goal</p>
+    <p style="margin-top:620px; color: #eee">z: draw polygon; x: place player; c: add npc; v: place goal; b: undo</p>
     <pre id="levelcode" style="margin-top: 20px; color: #3f3; width: 1000px;"></pre>
   </body>
 </html>
