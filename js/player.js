@@ -12,6 +12,8 @@ var s2 = Math.sqrt(0.5);
 var vx = [0, 1, 0, -1, s2, s2, -s2, -s2];
 var vy = [-1, 0, 1, 0, -s2, s2, s2, -s2];
 
+var PLAYER_MAX_HEALTH = 100;
+
 function Player(x,y) {
     // Spawns a Player at x,y
     this.x = x;
@@ -19,7 +21,7 @@ function Player(x,y) {
     this.size = SPRITE_SIZE;
     this.aggression = 0;
     this.lives = 3;
-    this.health = 100;
+    this.health = PLAYER_MAX_HEALTH;
     this.facing = FACING_E;
 
     this.flag_up = false;
@@ -93,7 +95,24 @@ function Player(x,y) {
         }
     }
 
-    this.onTouch = function() {
-        this.health -= 1
+    this.loseHealth = function(val) {
+        this.health -= val;
+        if (this.health <= 0) {
+            this.onLoseLife();
+        }
+    }
+
+    this.onLoseLife = function() {
+        this.lives -= 1;
+        this.health = PLAYER_MAX_HEALTH;
+        Engine.level(Engine.currentlevel);
+    }
+
+    this.onTouchEnemy = function() {
+        this.loseHealth(1);
+    }
+
+    this.onTouchExplosion = function() {
+        this.loseHealth(1.5);
     }
 }
