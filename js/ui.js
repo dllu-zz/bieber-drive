@@ -12,7 +12,7 @@ $(document).keydown(function(event) {
 	}
 
 	if(keys.slice(keys.length-6, keys.length).join("0") == magic2) {
-		Engine.die = true;
+		Engine.player.onLoseLife();
 	}
 
 	if(keys.slice(keys.length-4, keys.length).join("0") == magic3) {

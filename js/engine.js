@@ -12,7 +12,7 @@ var requestAnimFrame =
     function(callback, element) { setTimeout(callback, 1000/60); };
 
 $(document).ready(function() {
-    Engine.init()
+   Engine.introMessage(0);
 });
 
 function Engine(){}
@@ -121,7 +121,6 @@ Engine.update = function() {
     }
     Engine.los = VisibilityPolygon.compute([Engine.player.x, Engine.player.y], Engine.seg);
     Engine.draw();
-    Engine.drawfow();
 }
 
 Engine.init = function() {
@@ -155,11 +154,39 @@ Engine.init = function() {
     Engine.update();
 }
 
+Engine.introMessage = function (i) {
+    //Engine.$viewport.css({'display':'none'});
+    //Engine.$player.css({'display':'none'});
+
+    var texts = ["It is the end of days,<br>my Fallen Child...", "Now, I send you to walk the road to salvation."]
+
+    $('#announce').css({'display': 'none'})
+
+    if (i < texts.length) {
+        $('#message').html(texts[i]);
+        setTimeout(function() {
+            Engine.introMessage(i+1);
+        }, 3000)
+    }
+    else {
+        setTimeout(function() {
+            $('#message').css({'display': 'none'})
+            Engine.init()
+         }, 3000);
+    }
+    /*window.setTimeout(function(){
+        Engine.$viewport.css({'display':'block'});
+        Engine.$player.css({'display':'block'});
+        Engine.running = true;
+    }, 4000);*/
+}
+
 
 Engine.level = function(n) {
     // Level up to level n
     // resets the player, weapon, and all NPCs
 
+    $("#announce").css({'display': 'block'});
     // check if game has been beaten
     if(n>=levels.length) {
         $('#announce').text("win");
