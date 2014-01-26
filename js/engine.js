@@ -47,7 +47,7 @@ Engine.update = function() {
         }
         // Remove health of player
         if (VisibilityPolygon.inPolygon([Engine.player.x, Engine.player.y], Engine.explosions[i].poly))
-            Engine.player.loseHealth(1);
+            Engine.player.onTouchExplosion();
     }
 
     // for each exploding grenade, we have to make it explode and kill all NPCs in the vicinity
@@ -292,7 +292,7 @@ Engine.draw = function() {
     Engine.ctx.fill();
 
     $("#lives").html("Lives: " + Engine.player.lives);
-    $("#health").html("Health: " + Engine.player.health);
+    $("#health").html("Health: " + Engine.player.health.toFixed(1));
 }
 
 Engine.hitTest = function(x, y) {

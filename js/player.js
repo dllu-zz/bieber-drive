@@ -82,7 +82,11 @@ function Player(x,y) {
         Engine.level(Engine.currentlevel);
     }
 
-    this.onTouch = function() {
+    this.onTouchEnemy = function() {
         this.loseHealth(1);
+    }
+
+    this.onTouchExplosion = function() {
+        this.loseHealth(1.5);
     }
 }
