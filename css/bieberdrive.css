@@ -78,6 +78,14 @@ body {
 	color: #ccc;
 }
 
+#instructions {
+	position: absolute;
+	bottom: 0px;
+	left: 250px;
+	color: #ccc;
+}
+
+
 #lives {
 	position: absolute;
 	top: 590px;
