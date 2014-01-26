@@ -1,8 +1,12 @@
 // Constants
-var FACING_UP = 0;
-var FACING_RIGHT = 1;
-var FACING_DOWN = 2;
-var FACING_LEFT = 3;
+var FACING_N = 0;
+var FACING_E = 1;
+var FACING_S = 2;
+var FACING_W = 3;
+var FACING_NE = 4;
+var FACING_SE = 5;
+var FACING_SW = 6;
+var FACING_NW = 7;
 
 function Player(x,y) {
 	// Spawns a Player at x,y
@@ -10,7 +14,7 @@ function Player(x,y) {
 	this.y = y;
 	this.aggression = 0;
 	this.lives = 3;
-	this.facing = FACING_RIGHT;
+	this.facing = FACING_E;
 
 	this.flag_up = false;
 	this.flag_down = false;
@@ -21,21 +25,37 @@ function Player(x,y) {
 		// NEED TO DETECT FOR COLLISIONS
 		var vert = (this.flag_up && !this.flag_down) || (!this.flag_up && this.flag_down);
 		var horz = (this.flag_left && !this.flag_right) || (!this.flag_left && this.flag_right);
-		var nx, ny;
+		var nx = 0;
+		var ny = 0;
 
 		if (vert)
-			ny = this.y + ((this.flag_up ? -1 : 1) * (horz ? Math.sqrt(0.5) : 1));
-		else
-			ny = this.y;
-
+			ny = ((this.flag_up ? -1 : 1) * (horz ? Math.sqrt(0.5) : 1));
 		if (horz)
-			nx = this.x + ((this.flag_left ? -1 : 1) * (vert ? Math.sqrt(0.5) : 1));
-		else
-			nx = this.x;
+			nx = ((this.flag_left ? -1 : 1) * (vert ? Math.sqrt(0.5) : 1));
 
-		if (!Engine.hitTest(nx, ny)) {
-			this.x = nx;
-			this.y = ny;
+		if (!Engine.hitTest(this.x + nx, this.y + ny)) {
+			this.x += nx;
+			this.y += ny;
+			if (nx > 0) {
+				if (ny > 0)
+					this.facing = FACING_SE;
+				else if (ny < 0)
+					this.facing = FACING_NE;
+				else
+					this.facing = FACING_E;
+			} else if (nx < 0) {
+				if (ny > 0)
+					this.facing = FACING_SW;
+				else if (ny < 0)
+					this.facing = FACING_NW;
+				else
+					this.facing = FACING_W;
+			} else {
+				if (ny > 0)
+					this.facing = FACING_S;
+				else if (ny < 0)
+					this.facing = FACING_N;
+			}
 		}
 	}
 }
