@@ -24,7 +24,7 @@ body {
 	line-height: 600px;
 	text-align: center;
 	font-size: 100px;
-	color: #eee;
+	color: #ccc;
 }
 
 #viewport {
@@ -37,8 +37,8 @@ body {
 	position: absolute;
 	top: 0px;
 	left:0px;
-	width: 11px;
-	height: 11px;
+	width: 16px;
+	height: 16px;
 	background: url('../resources/images/player.svg') center no-repeat;
 	transform-origin: center;
 	-moz-transform-origin: center;
@@ -52,14 +52,14 @@ body {
 	position: absolute;
 	bottom: 10px;
 	right: 10px;
-	color: white;
+	color: #ccc;
 }
 
 #lives {
 	position: absolute;
 	top: 620px;
 	left: 10px;
-	color: #f03;
+	color: #ccc;
 	line-height: 50px;
 	font-size: 50px;
 }
@@ -68,7 +68,7 @@ body {
 	position: absolute;
 	top: 605px;
 	left: 0px;
-	background-color: #58f;
+	background-color: #888;
 	height: 10px;
 	width: 100px;
 	transition: width 0.2s ease;

@@ -1,6 +1,6 @@
 
-var SPRITE_SIZE = 5;
-var GRENADE_SIZE = 3;
+var SPRITE_SIZE = 8;
+var GRENADE_SIZE = 5;
 var BULLET_SIZE = 2;
 var SPRITE_SPEED_MULTIPLIER = 2;
 var PARTICLE_SIZE = 3;
@@ -115,12 +115,13 @@ Engine.update = function() {
     }
 
     // level up
-    if(Engine.dist(Engine.player.x, Engine.player.y, Engine.goal.x, Engine.goal.y) < 5 || Engine.win) {
+    if(Engine.dist(Engine.player.x, Engine.player.y, Engine.goal.x, Engine.goal.y) < 2*SPRITE_SIZE || Engine.win) {
         Engine.level(Engine.currentlevel+1);
         Engine.win = false;
     }
     Engine.los = VisibilityPolygon.compute([Engine.player.x, Engine.player.y], Engine.seg);
     Engine.draw();
+    Engine.drawfow();
 }
 
 Engine.init = function() {
@@ -192,7 +193,7 @@ Engine.level = function(n) {
         Engine.$viewport.css({'display':'block'});
         Engine.$player.css({'display':'block'});
         Engine.running = true;
-    }, 2000);
+    }, 4000);
 
     // set the current level
     Engine.currentlevel = n;
@@ -211,6 +212,9 @@ Engine.level = function(n) {
     Engine.player.x = levels[n].start[0];
     Engine.player.y = levels[n].start[1];
 
+    // clear line of sight;
+    Engine.los = undefined;
+
     // clear the list of NPCs
     Engine.npc = []; // list of Npc objects
 
@@ -223,7 +227,7 @@ Engine.level = function(n) {
     // clear the list of explosions
     Engine.explosions = []; // list of objects {poly:[],t:int}, which are visibility polygons
 
-    // compute hit region by drawing the polygons and checking which pixels are 200
+    // compute hit region by drawing the polygons and checking which pixels are 400
     Engine.draw();
     Engine.imdata = Engine.ctx.getImageData(0, 0, 2*Engine.width, 2*Engine.height).data;
 
@@ -255,7 +259,7 @@ Engine.draw = function() {
     for(var k=1, l=polygon.length; k<l; k++) {
         Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
     }
-    Engine.ctx.fillStyle = 'rgb(200,200,200)';
+    Engine.ctx.fillStyle = 'rgb(40,40,40)';
     Engine.ctx.fill();
     // draw the other polygons
     for(var i=1, j=Engine.poly.length; i<j; i++) {
@@ -266,6 +270,17 @@ Engine.draw = function() {
             Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
         }
         Engine.ctx.fillStyle = '#222';
+        Engine.ctx.fill();
+    }
+    // draw line of sight
+    if(Engine.los) {
+        var polygon = Engine.los;
+        Engine.ctx.beginPath();
+        Engine.ctx.moveTo(polygon[0][0], polygon[0][1]);
+        for(var k=1, l=polygon.length; k<l; k++) {
+            Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
+        }
+        Engine.ctx.fillStyle = '#ccc';
         Engine.ctx.fill();
     }
 
@@ -311,7 +326,7 @@ Engine.draw = function() {
     }
     // Engine.ctx.beginPath();
     // Engine.ctx.arc(Engine.player.x, Engine.player.y, SPRITE_SIZE, 0, Math.PI*2, true);
-    // Engine.ctx.fillStyle = '#f30';
+    // Engine.ctx.fillStyle = 'rgb(40,40,40)';
     // Engine.ctx.fill();
 
     // draw explosions
@@ -333,11 +348,8 @@ Engine.draw = function() {
         if(npc.alive) {
             Engine.ctx.beginPath();
             Engine.ctx.arc(npc.x, npc.y, SPRITE_SIZE, 0, Math.PI*2, true);
-            Engine.ctx.fillStyle = '#f30';
+            Engine.ctx.fillStyle = 'rgb(40,40,40)';
             Engine.ctx.fill();
-            Engine.ctx.strokeStyle = '#000';
-            Engine.ctx.strokeWidth = '1px';
-            Engine.ctx.stroke();
         } else {
             for(var j=0, _j=npc.deadparticles.length; j<_j; j++) {
                 var d = npc.deadness, dd = 1.5*Math.sqrt(d)+0.1*d;
@@ -346,7 +358,7 @@ Engine.draw = function() {
                     npc.x+npc.deadparticles[j][0]*dd, 
                     npc.y+npc.deadparticles[j][1]*dd, 
                     SPRITE_SIZE*(60-d)/60, 0, Math.PI*2, true);
-                Engine.ctx.fillStyle = 'rgba(0,0,0,' + (1-npc.deadness/60.0) +')';
+                Engine.ctx.fillStyle = 'rgba(40,40,40,' + (1-npc.deadness/60.0) +')';
                 Engine.ctx.fill();
             }
         }
@@ -373,7 +385,7 @@ Engine.draw = function() {
         if(Engine.bullets[i].who===0) {
             Engine.ctx.fillStyle = '#000';
         } else {
-            Engine.ctx.fillStyle = '#f30';
+            Engine.ctx.fillStyle = 'rgb(40,40,40)';
         }
         Engine.ctx.fill();
     }
@@ -386,6 +398,7 @@ Engine.draw = function() {
     Engine.ctx.strokeStyle = '#000';
     Engine.ctx.strokeWidth = '1px';
     Engine.ctx.stroke();
+
     var s = '';
     for(var i=0; i<Engine.player.lives; i++) {
         s += '♥'
@@ -403,7 +416,7 @@ Engine.hitTest = function(x, y) {
     x=Math.round(2*x);
     y=Math.round(2*y);
     // console.log(x, y, Engine.imdata[4*(y*2*Engine.width+x)]);
-    return Engine.imdata[4*(y*2*Engine.width+x)]!=200;
+    return Engine.imdata[4*(y*2*Engine.width+x)]!=40;
 }
 
 Engine.hitWall = function(obj, x, y) {
