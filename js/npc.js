@@ -17,7 +17,7 @@ function Npc(x,y,a) {
 			var nx = this.x + cspeed * this.xdir;
 			var ny = this.y + cspeed * this.ydir;
 			
-			if(Engine.hitTest(nx, ny)) {
+			if(Engine.hitWall(nx, ny)) {
 				this.xdir = Engine.randInt(-1, 1);
 				this.ydir = Engine.randInt(-1, 1);
 				if(Math.abs(this.xdir) + Math.abs(this.ydir) == 0) {

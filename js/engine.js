@@ -325,6 +325,18 @@ Engine.hitTest = function(x, y) {
     return false;
 }
 
+Engine.hitWall = function(x, y) {
+    for (var i = 0; i < 40; i++) {
+        var theta = i * Math.PI / 20;
+        var dx = SPRITE_SIZE * Math.cos(theta);
+        var dy = SPRITE_SIZE * Math.sin(theta);
+        if (Engine.hitTest(x + dx, y + dy)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 Engine.dist = function(ax, ay, bx, by) {
     return Math.sqrt((ax-=bx)*ax + (ay-=by)*ay);
 }

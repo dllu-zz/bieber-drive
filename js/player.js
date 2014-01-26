@@ -36,17 +36,7 @@ function Player(x,y) {
         if (horz)
             nx = ((this.flag_left ? -1 : 1) * (vert ? Math.sqrt(0.5) : 1));
 
-        var hit_wall = false;
-        for (var i = 0; i < 40; i++) {
-            var theta = i * Math.PI / 20;
-            var dx = SPRITE_SIZE * Math.cos(theta);
-            var dy = SPRITE_SIZE * Math.sin(theta);
-            if (Engine.hitTest(this.x + nx + dx, this.y + ny + dy)) {
-                hit_wall = true;
-                break;
-            }
-        }
-        if (!hit_wall) {
+        if (!Engine.hitWall(this.x + nx, this.y + ny)) {
             this.x += nx;
             this.y += ny;
             if (nx > 0) {
