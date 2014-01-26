@@ -205,17 +205,37 @@ Engine.draw = function() {
     }
     // draw the player
     switch (Engine.player.facing){
-        case 0:
-            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.top], Engine.player.x, Engine.player.y);
+        case FACING_N:
+            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.N], Engine.player.x, Engine.player.y);
         break;
-        case 1:
-            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.right], Engine.player.x, Engine.player.y);
+        case FACING_E:
+                    console.log("east,", Engine.player.y);
+
+            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.E], Engine.player.x, Engine.player.y);
         break;
-        case 2:
-            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.bottom], Engine.player.x, Engine.player.y);
+        case FACING_S:
+            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.S], Engine.player.x, Engine.player.y);
         break;
-        case 3:
-            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.left], Engine.player.x, Engine.player.y);
+        case FACING_W:
+            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.W], Engine.player.x, Engine.player.y);
+        break;
+        case FACING_NE:
+            Engine.ctx.save();
+            Engine.ctx.translate(Engine.player.x, Engine.player.y);
+            Engine.ctx.rotate(270);
+            Engine.ctx.translate(-Engine.player.x, -Engine.player.y);
+            var img = Engine.resourceCache[images[Engine.currentlevel].character.NE];
+            Engine.ctx.drawImage(img, Engine.player.x, Engine.player.y);
+            Engine.ctx.restore();
+        break;
+        case FACING_SE:
+            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.SE], Engine.player.x, Engine.player.y);
+        break;
+        case FACING_SW:
+            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.SW], Engine.player.x, Engine.player.y);
+        break;
+        case FACING_NW:
+            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.NW], Engine.player.x, Engine.player.y);
         break;
         default: console.log("MOTHERFUCKING GARBAGE PIECE OF HELL FUCKING SHIT");
     }
@@ -228,10 +248,12 @@ Engine.draw = function() {
 
     // draw npcs
     for(var i=0, _i=Engine.npc.length; i<_i; i++) {
-        Engine.ctx.beginPath();
-        Engine.ctx.arc(Engine.npc[i].x, Engine.npc[i].y, 5, 0, Math.PI*2, true);
-        Engine.ctx.fillStyle = '#f30';
-        Engine.ctx.fill();
+    //    Engine.ctx.beginPath();
+    //    Engine.ctx.arc(Engine.npc[i].x, Engine.npc[i].y, 5, 0, Math.PI*2, true);
+    //    Engine.ctx.fillStyle = '#f30';
+    //    Engine.ctx.fill();
+
+
     }
 
     // draw goal

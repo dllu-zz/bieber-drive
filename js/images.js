@@ -1,8 +1,10 @@
 images = [ // indexed by different levels
 	{ // LEVEL 1
 		// image resource URLs
-		character: {left:"./resources/images/scratch_left.jpg", right:"./resources/images/scratch_right.jpg", 
-					top:"./resources/images/scratch_top.jpg", bottom:"./resources/images/scratch_bottom.jpg"
+		character: {W:"./resources/images/scratch_left.jpg", E:"./resources/images/scratch_right.jpg", 
+					N:"./resources/images/scratch_top.jpg", S:"./resources/images/scratch_bottom.jpg",
+					NE: "./resources/images/scratch_right.jpg", SE:"./resources/images/scratch_right.jpg", 
+					SW:"./resources/images/scratch_left.jpg", NW:"./resources/images/scratch_left.jpg"
 		},
 		npc: {left:"./resources/images/char2.png", right:"./resources/images/char2.png", 
 				top:"./resources/images/char2.png", bottom:"./resources/images/char2.png"
