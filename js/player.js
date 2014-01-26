@@ -12,6 +12,7 @@ function Player(x,y) {
     // Spawns a Player at x,y
     this.x = x;
     this.y = y;
+    this.size = SPRITE_SIZE;
     this.aggression = 0;
     this.lives = 3;
     this.facing = FACING_E;
@@ -36,7 +37,7 @@ function Player(x,y) {
         if (horz)
             nx = ((this.flag_left ? -1 : 1) * (vert ? Math.sqrt(0.5) : 1));
 
-        if (!Engine.hitWall(this.x + nx, this.y + ny)) {
+        if (!Engine.hitWall(this, this.x + nx, this.y + ny)) {
             this.x += nx;
             this.y += ny;
             if (nx > 0) {

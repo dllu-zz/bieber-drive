@@ -325,16 +325,22 @@ Engine.hitTest = function(x, y) {
     return false;
 }
 
-Engine.hitWall = function(x, y) {
+Engine.hitWall = function(obj, x, y) {
     for (var i = 0; i < 40; i++) {
         var theta = i * Math.PI / 20;
-        var dx = SPRITE_SIZE * Math.cos(theta);
-        var dy = SPRITE_SIZE * Math.sin(theta);
+        var dx = obj.size * Math.cos(theta);
+        var dy = obj.size * Math.sin(theta);
         if (Engine.hitTest(x + dx, y + dy)) {
             return true;
         }
     }
     return false;
+}
+
+Engine.hitObject = function(obj1, obj2) {
+    var dx = obj1.x - obj2.x;
+    var dy = obj1.y - obj2.y;
+    return Math.sqrt((x * x) + (y * y)) < obj1.size + obj2.size;
 }
 
 Engine.dist = function(ax, ay, bx, by) {
