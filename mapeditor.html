@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <title>bieber-drive</title>
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="./js/visibility_polygon.js"></script>
+    <script>
+var requestAnimFrame = 
+    window.requestAnimationFrame || 
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    function(callback, element) { setTimeout(callback, 1000/60); };
+var mode = 0;
+// 0: draw polygon
+// 1: place player
+// 2: add npc
+// 3: place goal
+$(document).ready(function(){
+  Engine.init()
+});
+function Engine(){}
+Engine.init = function() {
+    // set up the canvas
+    Engine.$viewport = $('#viewport');
+    Engine.viewport = Engine.$viewport[0];
+    Engine.ctx = viewport.getContext('2d');
+    Engine.width = 1000;
+    Engine.height = 600;
+
+    /* I treat all devices as being Hi-DPI (i.e. a pixel ratio of 2)
+    because even on normal displays, this looks better as it is like
+    anti-aliasing. */
+    Engine.viewport.width = Engine.width * 2;
+    Engine.viewport.height = Engine.height * 2;
+
+    Engine.viewport.style.width = Engine.width + 'px';
+    Engine.viewport.style.height = Engine.height + 'px';
+    Engine.ctx.scale(2, 2);
+
+    // set up the new player
+    Engine.poly = [[]];
+    Engine.player = {x:500,y:300};
+    Engine.npc = [];
+    Engine.goal = {x:800,y:480};
+    Engine.explosions = [];
+
+    Engine.$viewport.click(function(event) {
+        var x = event.clientX, y = event.clientY;
+        switch(mode){
+            case 0:
+                Engine.poly[Engine.poly.length-1].push([x,y]); 
+                Engine.segs = VisibilityPolygon.convertToSegments(Engine.poly);
+                break;
+            case 1:
+                Engine.player.x = x, Engine.player.y = y; break;
+            case 2:
+                Engine.npc.push([x,y]); break;
+            case 3:
+                Engine.goal.x = x, Engine.goal.y = y; break;
+        }
+        $('#levelcode').text(JSON.stringify({
+            poly:Engine.poly, start:[Engine.player.x, Engine.player.y], goal:[Engine.goal.x, Engine.goal.y], npc:Engine.npc
+        }))
+    });
+    Engine.$viewport.mousemove(function(event) {
+        var x = event.clientX, y = event.clientY;
+        Engine.explosions = [VisibilityPolygon.compute([x,y],Engine.segs)]
+    });
+    $(document).keydown(function(event) {
+        var w = event.which;
+        console.log(event.which);
+        switch(w) {
+            case 90: 
+                mode = 0; 
+                if(Engine.poly[Engine.poly.length-1].length<3) Engine.poly.pop();
+                Engine.poly.push([]); 
+                break;
+            case 88: mode = 1; break;
+            case 67: mode = 2; break;
+            case 86: mode = 3; break;
+        }
+    });
+    Engine.draw();
+}
+
+Engine.draw = function() {
+    requestAnimFrame(Engine.draw);
+    Engine.ctx.beginPath();
+    Engine.ctx.rect(0, 0, Engine.width, Engine.height);
+    Engine.ctx.fillStyle = '#222';
+    Engine.ctx.fill();
+    // draw the world
+    // draw the first polygon
+    var polygon = Engine.poly[0];
+    Engine.ctx.beginPath();
+    Engine.ctx.moveTo(polygon[0][0], polygon[0][1]);
+    for(var k=1, l=polygon.length; k<l; k++) {
+        Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
+    }
+    Engine.ctx.fillStyle = '#888';
+    Engine.ctx.fill();
+    // draw the other polygons
+    for(var i=1, j=Engine.poly.length; i<j; i++) {
+        var polygon = Engine.poly[i];
+        if(polygon.length<=2) continue;
+        Engine.ctx.beginPath();
+        Engine.ctx.moveTo(polygon[0][0], polygon[0][1]);
+        for(var k=1, l=polygon.length; k<l; k++) {
+            Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
+        }
+        Engine.ctx.fillStyle = '#222';
+        Engine.ctx.fill();
+    }
+    // draw the player
+    Engine.ctx.beginPath();
+    Engine.ctx.arc(Engine.player.x, Engine.player.y, 5, 0, Math.PI*2, true);
+    Engine.ctx.fillStyle = '#58f';
+    Engine.ctx.fill();
+
+    // draw each explosions
+    for(var i=0, _i=Engine.explosions.length; i<_i; i++) {
+        var polygon = Engine.explosions[i];
+        Engine.ctx.beginPath();
+        Engine.ctx.moveTo(polygon[0][0], polygon[0][1]);
+        for(var k=1, l=polygon.length; k<l; k++) {
+            Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
+        }
+        Engine.ctx.fillStyle = 'rgba(255,255,0,0.3)';
+        Engine.ctx.fill();
+    }
+    // draw npcs
+    for(var i=0, _i=Engine.npc.length; i<_i; i++) {
+        Engine.ctx.beginPath();
+        Engine.ctx.arc(Engine.npc[i][0], Engine.npc[i][1], 5, 0, Math.PI*2, true);
+        Engine.ctx.fillStyle = '#f30';
+        Engine.ctx.fill();
+    }
+
+    // draw goal
+    Engine.ctx.beginPath();
+    Engine.ctx.arc(Engine.goal.x, Engine.goal.y, 5, 0, Math.PI*2, true);
+    Engine.ctx.fillStyle = '#3f3';
+    Engine.ctx.fill();
+}
+    </script>
+    <link rel="stylesheet" type="text/css" href="./css/bieberdrive.css" />
+  </head>
+  <body>
+    <canvas id="viewport">Use a better browser thx.</canvas>
+    <p style="margin-top:620px; color: #eee">z: draw polygon; x: place player; c: add npc; v: place goal</p>
+    <pre id="levelcode" style="margin-top: 20px; color: #3f3; width: 1000px;"></pre>
+  </body>
+</html>
