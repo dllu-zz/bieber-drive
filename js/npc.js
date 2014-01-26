@@ -34,6 +34,10 @@ function Npc(x,y,a) {
     }
     this.update = function() {
         if(this.alive) {
+            if(this.stunned>0) {
+                this.stunned--;
+                return;
+            }
             if(Math.random()*50<this.aggression/60 && Engine.visible(this.x, this.y)) {
                 this.xdir = Engine.player.x - this.x;
                 this.ydir = Engine.player.y - this.y;

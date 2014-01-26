@@ -93,8 +93,8 @@ Engine.update = function() {
         // kill all NPCs which are in the explosion
         for(var j=0, _j=Engine.npc.length; j<_j; j++) {
             if(Engine.npc[j].alive && VisibilityPolygon.inPolygon([Engine.npc[j].x, Engine.npc[j].y], Engine.explosions[i].poly)) {
-                Engine.npc[j].alive = false;
-                Engine.player.aggression++;
+                Engine.npc[j].stunned = 200;
+                Engine.player.aggression+=0.1;
             }
         }
         // Remove health of player
@@ -340,6 +340,15 @@ Engine.draw = function() {
         Engine.ctx.fillStyle = 'rgba(255,230,0,0.3)';
         Engine.ctx.fill();
     }
+    
+    // draw goal
+    Engine.ctx.beginPath();
+    Engine.ctx.rect(Engine.goal.x-SPRITE_SIZE+2, Engine.goal.y-SPRITE_SIZE+2, 2*SPRITE_SIZE-4, 2*SPRITE_SIZE-4);
+    Engine.ctx.fillStyle = '#888';
+    Engine.ctx.fill();
+    Engine.ctx.strokeStyle = '#000';
+    Engine.ctx.lineWidth = 1;
+    Engine.ctx.stroke();
 
     // draw npcs
     for(var i=0, _i=Engine.npc.length; i<_i; i++) {
@@ -349,6 +358,9 @@ Engine.draw = function() {
             Engine.ctx.beginPath();
             Engine.ctx.arc(npc.x, npc.y, SPRITE_SIZE, 0, Math.PI*2, true);
             Engine.ctx.fillStyle = 'rgb(40,40,40)';
+            if(npc.stunned>0 && npc.stunned%6<3) {
+                Engine.ctx.fillStyle = '#444';
+            }
             Engine.ctx.fill();
         } else {
             for(var j=0, _j=npc.deadparticles.length; j<_j; j++) {
@@ -389,15 +401,6 @@ Engine.draw = function() {
         }
         Engine.ctx.fill();
     }
-
-    // draw goal
-    Engine.ctx.beginPath();
-    Engine.ctx.arc(Engine.goal.x, Engine.goal.y, SPRITE_SIZE, 0, Math.PI*2, true);
-    Engine.ctx.fillStyle = '#3f3';
-    Engine.ctx.fill();
-    Engine.ctx.strokeStyle = '#000';
-    Engine.ctx.strokeWidth = '1px';
-    Engine.ctx.stroke();
 
     var s = '';
     for(var i=0; i<Engine.player.lives; i++) {
