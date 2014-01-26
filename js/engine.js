@@ -121,7 +121,7 @@ Engine.update = function() {
         Engine.win = false;
     }
     Engine.los = VisibilityPolygon.compute([Engine.player.x, Engine.player.y], Engine.seg);
-    Engine.draw();
+    Engine.draw(34);
 }
 
 Engine.init = function() {
@@ -274,7 +274,7 @@ Engine.level = function(n) {
     Engine.los = VisibilityPolygon.compute([Engine.player.x, Engine.player.y], Engine.seg);
 }
 
-Engine.draw = function(bg=34) {
+Engine.draw = function(bg) {
     Engine.ctx.beginPath();
     Engine.ctx.rect(0, 0, Engine.width, Engine.height);
     Engine.ctx.fillStyle = '#222';
@@ -365,7 +365,7 @@ Engine.draw = function(bg=34) {
         for(var k=1, l=polygon.length; k<l; k++) {
             Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
         }
-        Engine.ctx.fillStyle = 'rgba(255,230,0,0.3)';
+        Engine.ctx.fillStyle = 'rgba(255,255,255,0.3)';
         Engine.ctx.fill();
     }
 
@@ -411,10 +411,10 @@ Engine.draw = function(bg=34) {
         if(!Engine.grenades[i].active) continue;
         Engine.ctx.beginPath();
         Engine.ctx.arc(Engine.grenades[i].x, Engine.grenades[i].y, GRENADE_SIZE, 0, Math.PI*2, true);
-        if(Engine.grenades[i].t%6<3) {
-            Engine.ctx.fillStyle = '#800';
+        if(Engine.grenades[i].t%6<2) {
+            Engine.ctx.fillStyle = '#fff';
         } else {
-            Engine.ctx.fillStyle = '#59f';
+            Engine.ctx.fillStyle = '#000';
         }
         Engine.ctx.fill();
     }
