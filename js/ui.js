@@ -2,9 +2,6 @@
 
 $(document).keydown(function(event) {
 	switch (event.keyCode) {
-		case 32:
-			console.log("Spacebar was pressed!");
-			break;
 		case 37:
 			// Left
 			Engine.player.flag_left = true;
@@ -29,7 +26,8 @@ $(document).keydown(function(event) {
 $(document).keyup(function(event) {
 	switch (event.keyCode) {
 		case 32:
-			console.log("Spacebar was released!");
+			// Spacebar
+			Engine.player.dropGrenade();
 			break;
 		case 37:
 			// Left

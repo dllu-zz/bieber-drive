@@ -21,6 +21,10 @@ function Player(x,y) {
 	this.flag_right = false;
 	this.flag_left = false;
 
+	this.dropGrenade = function() {
+		new Weapon(this.x, this.y);
+	}
+
 	this.update = function() {
 		// NEED TO DETECT FOR COLLISIONS
 		var vert = (this.flag_up && !this.flag_down) || (!this.flag_up && this.flag_down);
