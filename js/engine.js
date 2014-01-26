@@ -121,7 +121,10 @@ Engine.update = function() {
         Engine.win = false;
     }
     Engine.los = VisibilityPolygon.compute([Engine.player.x, Engine.player.y], Engine.seg);
-    Engine.draw(34);
+    if (Engine.currentlevel === 7){
+        Engine.draw(100); 
+    }
+    else Engine.draw(34);
 }
 
 Engine.init = function() {
