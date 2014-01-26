@@ -1,6 +1,7 @@
 
 var SPRITE_SIZE = 5;
 var GRENADE_SIZE = 3;
+var BULLET_SIZE = 1;
 var SPRITE_SPEED_MULTIPLIER = 2;
 
 var requestAnimFrame = 
@@ -316,6 +317,8 @@ Engine.draw = function() {
     Engine.ctx.arc(Engine.goal.x, Engine.goal.y, SPRITE_SIZE, 0, Math.PI*2, true);
     Engine.ctx.fillStyle = '#3f3';
     Engine.ctx.fill();
+
+    $("#health").html(Engine.player.health);
 }
 
 Engine.hitTest = function(x, y) {

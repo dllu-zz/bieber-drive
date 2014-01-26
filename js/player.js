@@ -15,6 +15,7 @@ function Player(x,y) {
     this.size = SPRITE_SIZE;
     this.aggression = 0;
     this.lives = 3;
+    this.health = 100;
     this.facing = FACING_E;
 
     this.flag_up = false;
@@ -64,10 +65,6 @@ function Player(x,y) {
     }
 
     this.onTouch = function() {
-        this.flag_up = false;
-        this.flag_down = false;
-        this.flag_right = false;
-        this.flag_left = false;
-        this.x -= 5;
+        this.health -= 1
     }
 }
