@@ -121,7 +121,7 @@ Engine.update = function() {
         Engine.win = false;
     }
     Engine.los = VisibilityPolygon.compute([Engine.player.x, Engine.player.y], Engine.seg);
-    Engine.draw();
+    Engine.draw(34);
 }
 
 Engine.init = function() {
@@ -274,7 +274,7 @@ Engine.level = function(n) {
     Engine.los = VisibilityPolygon.compute([Engine.player.x, Engine.player.y], Engine.seg);
 }
 
-Engine.draw = function(bg=34) {
+Engine.draw = function(bg) {
     Engine.ctx.beginPath();
     Engine.ctx.rect(0, 0, Engine.width, Engine.height);
     Engine.ctx.fillStyle = '#222';
