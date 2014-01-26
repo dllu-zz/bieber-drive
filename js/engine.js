@@ -22,9 +22,7 @@ Engine.update = function() {
 
     // update each npc that is alive
     for(var i=0, _i=Engine.npc.length; i<_i; i++) {
-        if(Engine.npc[i].alive) {
-            Engine.npc[i].update();
-        }
+        Engine.npc[i].update();
     }
 
     // update the grenades' fuse countdowns
@@ -42,7 +40,7 @@ Engine.update = function() {
     while(Engine.grenades.length>0 && Engine.grenades[0].t <=0) {
         // compute explosion, remove grenade from the list
         var boom = {
-            poly:VisibilityPolygon.compute([grenades[0].x, grenades[0].y], Engine.seg),
+            poly:VisibilityPolygon.compute([Engine.grenades[0].x, Engine.grenades[0].y], Engine.seg),
             t: 30
         }
         Engine.explosions.push(boom);
@@ -224,13 +222,40 @@ Engine.draw = function() {
    // Engine.ctx.fillStyle = '#58f';
    // Engine.ctx.fill();
 
-    // draw each explosion
+    // draw explosions
+    for(var i=0, _i=Engine.explosions.length; i<_i; i++) {
+        var polygon = Engine.explosions[i].poly;
+        Engine.ctx.beginPath();
+        Engine.ctx.moveTo(polygon[0][0], polygon[0][1]);
+        for(var k=1, l=polygon.length; k<l; k++) {
+            Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
+        }
+        Engine.ctx.fillStyle = 'rgba(255,230,0,0.3)';
+        Engine.ctx.fill();
+    }
 
     // draw npcs
     for(var i=0, _i=Engine.npc.length; i<_i; i++) {
+        if(!Engine.npc[i].alive && Engine.npc[i].deadness>60) continue;
         Engine.ctx.beginPath();
         Engine.ctx.arc(Engine.npc[i].x, Engine.npc[i].y, 5, 0, Math.PI*2, true);
-        Engine.ctx.fillStyle = '#f30';
+        if(Engine.npc[i].alive) {
+            Engine.ctx.fillStyle = '#f30';
+        } else {
+            Engine.ctx.fillStyle = 'rgba(0,0,0,' + (1-Engine.npc[i].deadness/60.0) +')';
+        }
+        Engine.ctx.fill();
+    }
+
+    // draw grenades
+    for(var i=0, _i=Engine.grenades.length; i<_i; i++) {
+        Engine.ctx.beginPath();
+        Engine.ctx.arc(Engine.grenades[i].x, Engine.grenades[i].y, 3, 0, Math.PI*2, true);
+        if(Engine.grenades[i].t%6<3) {
+            Engine.ctx.fillStyle = '#f30';
+        } else {
+            Engine.ctx.fillStyle = '#58f';
+        }
         Engine.ctx.fill();
     }
 

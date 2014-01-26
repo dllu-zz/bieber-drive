@@ -22,7 +22,7 @@ function Player(x,y) {
 	this.flag_left = false;
 
 	this.dropGrenade = function() {
-		new Weapon(this.x, this.y);
+		Engine.grenades.push(new Weapon(this.x, this.y));
 	}
 
 	this.update = function() {
