@@ -19,6 +19,7 @@ function Npc(x,y,a) {
             var ny = this.y + cspeed * this.ydir * SPRITE_SPEED_MULTIPLIER;
             
             if(Engine.hitWall(this, nx, ny)) {
+                //console.log('NPC hit object at', nx, ny)
                 this.xdir = Engine.randInt(-1, 1);
                 this.ydir = Engine.randInt(-1, 1);
                 if(Math.abs(this.xdir) + Math.abs(this.ydir) == 0) {

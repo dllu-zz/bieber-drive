@@ -141,15 +141,15 @@ Engine.level = function(n) {
     // set the current level
     Engine.currentlevel = n;
 
-    // goal
-    Engine.goal = {
-        x:levels[n].goal[0],
-        y:levels[n].goal[1]
-    };
-
     // polygons
     Engine.poly = levels[n].poly;
     Engine.seg = VisibilityPolygon.convertToSegments(Engine.poly)
+
+    // clear goal
+    Engine.goal = {
+        x:-10,
+        y:-10
+    };
 
     // set the position of the player
     Engine.player.x = levels[n].start[0];
@@ -157,15 +157,27 @@ Engine.level = function(n) {
 
     // clear the list of NPCs
     Engine.npc = []; // list of Npc objects
-    for(var i=0, _i=levels[n].npc.length; i<_i; i++) {
-        Engine.npc.push(new Npc(levels[n].npc[i][0], levels[n].npc[i][1], Engine.player.aggression));
-    }
 
     // clear the list of grenades
     Engine.grenades = []; // list of Weapon objects
 
     // clear the list of explosions
     Engine.explosions = []; // list of objects {poly:[],t:int}, which are visibility polygons
+
+    // compute hit region by drawing the polygons and checking which pixels are 200
+    Engine.draw();
+    Engine.imdata = Engine.ctx.getImageData(0, 0, 2*Engine.width, 2*Engine.height).data;
+
+    // insert NPCs
+    for(var i=0, _i=levels[n].npc.length; i<_i; i++) {
+        Engine.npc.push(new Npc(levels[n].npc[i][0], levels[n].npc[i][1], Engine.player.aggression));
+    }
+
+    // goal
+    Engine.goal = {
+        x:levels[n].goal[0],
+        y:levels[n].goal[1]
+    };
 }
 
 Engine.draw = function() {
@@ -181,7 +193,7 @@ Engine.draw = function() {
     for(var k=1, l=polygon.length; k<l; k++) {
         Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
     }
-    Engine.ctx.fillStyle = '#888';
+    Engine.ctx.fillStyle = 'rgb(200,200,200)';
     Engine.ctx.fill();
     // draw the other polygons
     for(var i=1, j=Engine.poly.length; i<j; i++) {
@@ -294,19 +306,19 @@ Engine.draw = function() {
 }
 
 Engine.hitTest = function(x, y) {
-    if(!VisibilityPolygon.inPolygon([x,y], Engine.poly[0])) return true;
-    for(var i=1, _i=Engine.poly.length; i<_i; i++) {
-        if(VisibilityPolygon.inPolygon([x,y], Engine.poly[i])) return true;
-    }
-    return false;
+    x=Math.round(2*x);
+    y=Math.round(2*y);
+    // console.log(x, y, Engine.imdata[4*(y*2*Engine.width+x)]);
+    return Engine.imdata[4*(y*2*Engine.width+x)]!=200;
 }
 
 Engine.hitWall = function(obj, x, y) {
-    for (var i = 0; i < 40; i++) {
-        var theta = i * Math.PI / 20;
+    for (var i = 0; i < 10; i++) {
+        var theta = i * Math.PI / 5;
         var dx = obj.size * Math.cos(theta);
         var dy = obj.size * Math.sin(theta);
         if (Engine.hitTest(x + dx, y + dy)) {
+            //console.log('hit wall', x, y, obj.size, x+dx, x+dy, dx, dy)
             return true;
         }
     }
