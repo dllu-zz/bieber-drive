@@ -201,47 +201,47 @@ Engine.draw = function() {
         Engine.ctx.fillStyle = '#222';
         Engine.ctx.fill();
     }
+
+    function renderPlayer(direction, angle){
+            Engine.ctx.save();
+            Engine.ctx.translate(Engine.player.x, Engine.player.y);
+            Engine.ctx.rotate(angle);
+            Engine.ctx.translate(-Engine.player.x, -Engine.player.y);
+            var img = Engine.resourceCache[images[Engine.currentlevel].character[direction]];
+            Engine.ctx.drawImage(img, Engine.player.x, Engine.player.y);
+            Engine.ctx.restore();
+    }
+
+    //renderPlayer()
+
     // draw the player
     switch (Engine.player.facing){
         case FACING_N:
-            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.N], Engine.player.x, Engine.player.y);
+            renderPlayer("N", 0);
         break;
         case FACING_E:
-                    console.log("east,", Engine.player.y);
-
-            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.E], Engine.player.x, Engine.player.y);
+            renderPlayer("E", 0);
         break;
         case FACING_S:
-            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.S], Engine.player.x, Engine.player.y);
+            renderPlayer("S", 0);
         break;
         case FACING_W:
-            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.W], Engine.player.x, Engine.player.y);
+            renderPlayer("W", 0);
         break;
         case FACING_NE:
-            Engine.ctx.save();
-            Engine.ctx.translate(Engine.player.x, Engine.player.y);
-            Engine.ctx.rotate(270);
-            Engine.ctx.translate(-Engine.player.x, -Engine.player.y);
-            var img = Engine.resourceCache[images[Engine.currentlevel].character.NE];
-            Engine.ctx.drawImage(img, Engine.player.x, Engine.player.y);
-            Engine.ctx.restore();
+            renderPlayer("NE", 270);
         break;
         case FACING_SE:
-            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.SE], Engine.player.x, Engine.player.y);
+            renderPlayer("SE", 45*Math.PI/180);
         break;
         case FACING_SW:
-            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.SW], Engine.player.x, Engine.player.y);
+            renderPlayer("SW", -45*Math.PI/180);
         break;
         case FACING_NW:
-            Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.NW], Engine.player.x, Engine.player.y);
+            renderPlayer("NW", 45*Math.PI/180);
         break;
         default: console.log("MOTHERFUCKING GARBAGE PIECE OF HELL FUCKING SHIT");
     }
-   // Engine.ctx.beginPath();
-   // Engine.ctx.arc(Engine.player.x, Engine.player.y, 5, 0, Math.PI*2, true);
-   // Engine.ctx.fillStyle = '#58f';
-   // Engine.ctx.fill();
-
     // draw explosions
     for(var i=0, _i=Engine.explosions.length; i<_i; i++) {
         var polygon = Engine.explosions[i].poly;
