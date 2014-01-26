@@ -54,6 +54,7 @@ body {
 	width: 16px;
 	height: 16px;
 	background: url('../resources/images/player.svg') center no-repeat;
+	display: none;
 	transform-origin: center;
 	-moz-transform-origin: center;
 	-webkit-transform-origin: center;

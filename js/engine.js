@@ -128,7 +128,10 @@ Engine.update = function() {
         Engine.win = false;
     }
     Engine.los = VisibilityPolygon.compute([Engine.player.x, Engine.player.y], Engine.seg);
-    Engine.draw(34);
+    if (levels[Engine.currentlevel].title === "animu"){
+        Engine.draw(100); 
+    }
+    else Engine.draw(34);
 }
 
 Engine.init = function() {
@@ -290,26 +293,28 @@ Engine.draw = function(bg) {
     Engine.ctx.rect(0, 0, Engine.width, Engine.height);
     Engine.ctx.fillStyle = '#222';
     Engine.ctx.fill();
-    // draw the world
-    // draw the first polygon
-    var polygon = Engine.poly[0];
-    Engine.ctx.beginPath();
-    Engine.ctx.moveTo(polygon[0][0], polygon[0][1]);
-    for(var k=1, l=polygon.length; k<l; k++) {
-        Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
-    }
-    Engine.ctx.fillStyle = 'rgb('+bg+','+bg+','+bg+')';
-    Engine.ctx.fill();
-    // draw the other polygons
-    for(var i=1, j=Engine.poly.length; i<j; i++) {
-        var polygon = Engine.poly[i];
+    if(bg !== 34) {
+        // draw the world
+        // draw the first polygon
+        var polygon = Engine.poly[0];
         Engine.ctx.beginPath();
         Engine.ctx.moveTo(polygon[0][0], polygon[0][1]);
         for(var k=1, l=polygon.length; k<l; k++) {
             Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
         }
-        Engine.ctx.fillStyle = '#222';
+        Engine.ctx.fillStyle = 'rgb('+bg+','+bg+','+bg+')';
         Engine.ctx.fill();
+        // draw the other polygons
+        for(var i=1, j=Engine.poly.length; i<j; i++) {
+            var polygon = Engine.poly[i];
+            Engine.ctx.beginPath();
+            Engine.ctx.moveTo(polygon[0][0], polygon[0][1]);
+            for(var k=1, l=polygon.length; k<l; k++) {
+                Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
+            }
+            Engine.ctx.fillStyle = '#222';
+            Engine.ctx.fill();
+        }
     }
     // draw line of sight
     if(Engine.los) {
@@ -395,7 +400,7 @@ Engine.draw = function(bg) {
     for(var i=0, _i=Engine.npc.length; i<_i; i++) {
         if(!Engine.npc[i].alive && Engine.npc[i].deadness>=60) continue;
         var npc = Engine.npc[i];
-        if(npc.alive) {
+        if(npc.alive && (Engine.visible2(npc) || npc.stunned>0)) {
             Engine.ctx.beginPath();
             Engine.ctx.arc(npc.x, npc.y, SPRITE_SIZE, 0, Math.PI*2, true);
             Engine.ctx.fillStyle = 'rgb(34,34,34)';
@@ -403,7 +408,7 @@ Engine.draw = function(bg) {
                 Engine.ctx.fillStyle = '#444';
             }
             Engine.ctx.fill();
-        } else {
+        } else if(!npc.alive) {
             for(var j=0, _j=npc.deadparticles.length; j<_j; j++) {
                 var d = npc.deadness, dd = 1.5*Math.sqrt(d)+0.1*d;
                 Engine.ctx.beginPath();
@@ -432,7 +437,7 @@ Engine.draw = function(bg) {
 
     // draw bullets
     for(var i=0, _i=Engine.bullets.length; i<_i; i++) {
-        if(!Engine.bullets[i].active) continue;
+        if(!Engine.bullets[i].active || !Engine.visible(Engine.bullets[i].x, Engine.bullets[i].y)) continue;
         Engine.ctx.beginPath();
         Engine.ctx.arc(Engine.bullets[i].x, Engine.bullets[i].y, BULLET_SIZE, 0, Math.PI*2, true);
         if(Engine.bullets[i].who===0) {
@@ -455,6 +460,20 @@ Engine.draw = function(bg) {
 
 Engine.visible = function(x, y) {
     return VisibilityPolygon.inPolygon([x,y],Engine.los);
+}
+
+Engine.visible2 = function(obj) {
+    var x = obj.x, y = obj.y;
+    for (var i = 0; i < 10; i++) {
+        var theta = i * Math.PI / 5;
+        var dx = obj.size * Math.cos(theta);
+        var dy = obj.size * Math.sin(theta);
+        if (VisibilityPolygon.inPolygon([x + dx, y + dy], Engine.los)) {
+            //console.log('hit wall', x, y, obj.size, x+dx, x+dy, dx, dy)
+            return true;
+        }
+    }
+    return false;
 }
 
 Engine.hitTest = function(x, y) {
