@@ -121,7 +121,7 @@ Engine.update = function() {
         Engine.win = false;
     }
     Engine.los = VisibilityPolygon.compute([Engine.player.x, Engine.player.y], Engine.seg);
-    if (Engine.currentlevel === 7){
+    if (levels[Engine.currentlevel].title === "animu"){
         Engine.draw(100); 
     }
     else Engine.draw(34);
