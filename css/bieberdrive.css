@@ -32,3 +32,11 @@ body {
 	right: 10px;
 	color: white;
 }
+
+#lives {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	color: white;
+
+}
