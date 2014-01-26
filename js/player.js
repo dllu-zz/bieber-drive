@@ -116,6 +116,6 @@ function Player(x,y) {
     }
 
     this.onTouchExplosion = function() {
-        this.loseHealth(1.5);
+        this.loseHealth(10);
     }
 }
