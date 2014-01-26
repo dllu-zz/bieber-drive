@@ -12,7 +12,7 @@ var requestAnimFrame =
     function(callback, element) { setTimeout(callback, 1000/60); };
 
 $(document).ready(function() {
-   Engine.introMessage(0);
+    Engine.introMessage(0);
 });
 
 function Engine(){}
@@ -368,7 +368,7 @@ Engine.draw = function() {
         Engine.ctx.fillStyle = 'rgba(255,230,0,0.3)';
         Engine.ctx.fill();
     }
-    
+
     // draw goal
     Engine.ctx.beginPath();
     Engine.ctx.rect(Engine.goal.x-SPRITE_SIZE+2, Engine.goal.y-SPRITE_SIZE+2, 2*SPRITE_SIZE-4, 2*SPRITE_SIZE-4);
@@ -410,9 +410,9 @@ Engine.draw = function() {
         Engine.ctx.beginPath();
         Engine.ctx.arc(Engine.grenades[i].x, Engine.grenades[i].y, GRENADE_SIZE, 0, Math.PI*2, true);
         if(Engine.grenades[i].t%6<3) {
-            Engine.ctx.fillStyle = '#f00';
+            Engine.ctx.fillStyle = '#800';
         } else {
-            Engine.ctx.fillStyle = '#00f';
+            Engine.ctx.fillStyle = '#59f';
         }
         Engine.ctx.fill();
     }
