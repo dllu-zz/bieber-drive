@@ -37,6 +37,13 @@ function Npc(x,y,a) {
             if(Math.random()*50<this.aggression/60 && Engine.visible(this.x, this.y)) {
                 this.xdir = Engine.player.x - this.x;
                 this.ydir = Engine.player.y - this.y;
+            } else if(Math.random()*60<1) {
+                this.xdir = Engine.randInt(-1, 1);
+                this.ydir = Engine.randInt(-1, 1);
+                while(Math.abs(this.xdir) + Math.abs(this.ydir) == 0) {
+                    this.xdir = Engine.randInt(-1, 1);
+                    this.ydir = Engine.randInt(-1, 1);
+                }
             }
             var cspeed = 1/Engine.dist(this.xdir, this.ydir, 0,0);
             var nx = this.x + cspeed * this.xdir * SPRITE_SPEED_MULTIPLIER;
