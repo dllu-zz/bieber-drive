@@ -179,7 +179,7 @@ Engine.introMessage = function (i) {
         Engine.$viewport.css({'display':'block'});
         Engine.$player.css({'display':'block'});
         Engine.running = true;
-    }, 4000);*/
+    }, 3400);*/
 }
 
 
@@ -221,7 +221,7 @@ Engine.level = function(n) {
         Engine.$viewport.css({'display':'block'});
         Engine.$player.css({'display':'block'});
         Engine.running = true;
-    }, 4000);
+    }, 3400);
 
     // set the current level
     Engine.currentlevel = n;
@@ -255,8 +255,8 @@ Engine.level = function(n) {
     // clear the list of explosions
     Engine.explosions = []; // list of objects {poly:[],t:int}, which are visibility polygons
 
-    // compute hit region by drawing the polygons and checking which pixels are 400
-    Engine.draw();
+    // compute hit region by drawing the polygons and checking which pixels are 34
+    Engine.draw(40);
     Engine.imdata = Engine.ctx.getImageData(0, 0, 2*Engine.width, 2*Engine.height).data;
 
     // insert NPCs
@@ -274,7 +274,7 @@ Engine.level = function(n) {
     Engine.los = VisibilityPolygon.compute([Engine.player.x, Engine.player.y], Engine.seg);
 }
 
-Engine.draw = function() {
+Engine.draw = function(bg=34) {
     Engine.ctx.beginPath();
     Engine.ctx.rect(0, 0, Engine.width, Engine.height);
     Engine.ctx.fillStyle = '#222';
@@ -287,7 +287,7 @@ Engine.draw = function() {
     for(var k=1, l=polygon.length; k<l; k++) {
         Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
     }
-    Engine.ctx.fillStyle = 'rgb(40,40,40)';
+    Engine.ctx.fillStyle = 'rgb('+bg+','+bg+','+bg+')';
     Engine.ctx.fill();
     // draw the other polygons
     for(var i=1, j=Engine.poly.length; i<j; i++) {
@@ -354,7 +354,7 @@ Engine.draw = function() {
     }
     // Engine.ctx.beginPath();
     // Engine.ctx.arc(Engine.player.x, Engine.player.y, SPRITE_SIZE, 0, Math.PI*2, true);
-    // Engine.ctx.fillStyle = 'rgb(40,40,40)';
+    // Engine.ctx.fillStyle = 'rgb(34,34,34)';
     // Engine.ctx.fill();
 
     // draw explosions
@@ -370,13 +370,15 @@ Engine.draw = function() {
     }
 
     // draw goal
-    Engine.ctx.beginPath();
-    Engine.ctx.rect(Engine.goal.x-SPRITE_SIZE+2, Engine.goal.y-SPRITE_SIZE+2, 2*SPRITE_SIZE-4, 2*SPRITE_SIZE-4);
-    Engine.ctx.fillStyle = '#888';
-    Engine.ctx.fill();
-    Engine.ctx.strokeStyle = '#000';
-    Engine.ctx.lineWidth = 1;
-    Engine.ctx.stroke();
+    if(Engine.los && Engine.visible(Engine.goal.x, Engine.goal.y)) {
+        Engine.ctx.beginPath();
+        Engine.ctx.rect(Engine.goal.x-SPRITE_SIZE+2, Engine.goal.y-SPRITE_SIZE+2, 2*SPRITE_SIZE-4, 2*SPRITE_SIZE-4);
+        Engine.ctx.fillStyle = '#888';
+        Engine.ctx.fill();
+        Engine.ctx.strokeStyle = '#000';
+        Engine.ctx.lineWidth = 1;
+        Engine.ctx.stroke();
+    }
 
     // draw npcs
     for(var i=0, _i=Engine.npc.length; i<_i; i++) {
@@ -385,7 +387,7 @@ Engine.draw = function() {
         if(npc.alive) {
             Engine.ctx.beginPath();
             Engine.ctx.arc(npc.x, npc.y, SPRITE_SIZE, 0, Math.PI*2, true);
-            Engine.ctx.fillStyle = 'rgb(40,40,40)';
+            Engine.ctx.fillStyle = 'rgb(34,34,34)';
             if(npc.stunned>0 && npc.stunned%6<3) {
                 Engine.ctx.fillStyle = '#444';
             }
@@ -398,7 +400,7 @@ Engine.draw = function() {
                     npc.x+npc.deadparticles[j][0]*dd, 
                     npc.y+npc.deadparticles[j][1]*dd, 
                     SPRITE_SIZE*(60-d)/60, 0, Math.PI*2, true);
-                Engine.ctx.fillStyle = 'rgba(40,40,40,' + (1-npc.deadness/60.0) +')';
+                Engine.ctx.fillStyle = 'rgba(34,34,34,' + (1-npc.deadness/60.0) +')';
                 Engine.ctx.fill();
             }
         }
@@ -425,7 +427,7 @@ Engine.draw = function() {
         if(Engine.bullets[i].who===0) {
             Engine.ctx.fillStyle = '#000';
         } else {
-            Engine.ctx.fillStyle = 'rgb(40,40,40)';
+            Engine.ctx.fillStyle = 'rgb(34,34,34)';
         }
         Engine.ctx.fill();
     }
