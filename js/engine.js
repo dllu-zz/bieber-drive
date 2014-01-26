@@ -128,7 +128,7 @@ Engine.update = function() {
         Engine.win = false;
     }
     Engine.los = VisibilityPolygon.compute([Engine.player.x, Engine.player.y], Engine.seg);
-    if (levels[Engine.currentlevel].title === "Triumph"){
+    if (levels[Engine.currentlevel].title === "Purity"){
         Engine.draw(100); 
     }
     else Engine.draw(34);
