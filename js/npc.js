@@ -34,7 +34,11 @@ function Npc(x,y,a) {
     }
     this.update = function() {
         if(this.alive) {
-            var cspeed = Math.abs(this.xdir) + Math.abs(this.ydir) == 2 ? Math.sqrt(this.speed/2) : this.speed;
+            if(Math.random()*50<this.aggression/60 && Engine.visible(this.x, this.y)) {
+                this.xdir = Engine.player.x - this.x;
+                this.ydir = Engine.player.y - this.y;
+            }
+            var cspeed = 1/Engine.dist(this.xdir, this.ydir, 0,0);
             var nx = this.x + cspeed * this.xdir * SPRITE_SPEED_MULTIPLIER;
             var ny = this.y + cspeed * this.ydir * SPRITE_SPEED_MULTIPLIER;
             

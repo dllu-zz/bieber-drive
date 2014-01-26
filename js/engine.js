@@ -119,6 +119,7 @@ Engine.update = function() {
         Engine.level(Engine.currentlevel+1);
         Engine.win = false;
     }
+    Engine.los = VisibilityPolygon.compute([Engine.player.x, Engine.player.y], Engine.seg);
     Engine.draw();
 }
 
@@ -236,6 +237,9 @@ Engine.level = function(n) {
         x:levels[n].goal[0],
         y:levels[n].goal[1]
     };
+
+    // player visibility
+    Engine.los = VisibilityPolygon.compute([Engine.player.x, Engine.player.y], Engine.seg);
 }
 
 Engine.draw = function() {
@@ -386,6 +390,10 @@ Engine.draw = function() {
     $("#lives").html("Lives: " + Engine.player.lives);
     $("#health").html("Health: " + Engine.player.health.toFixed(1));
     $('#healthbar').css({'width': (Engine.player.health/PLAYER_MAX_HEALTH*Engine.width)+'px'})
+}
+
+Engine.visible = function(x, y) {
+    return VisibilityPolygon.inPolygon([x,y],Engine.los);
 }
 
 Engine.hitTest = function(x, y) {
