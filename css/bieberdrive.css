@@ -27,6 +27,19 @@ body {
 	color: #ccc;
 }
 
+#message {
+	width: 1000px;
+	height: 600px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	line-height: 80px;
+	text-align: center;
+	font-size: 60px;
+	color: #ccc;
+}
+
+
 #viewport {
 	position: absolute;
 	top: 0px;
