@@ -6,12 +6,26 @@ function Npc(x,y,a) {
     this.speed = 1;
     this.xdir = Engine.randInt(-1, 1);
     this.ydir = Engine.randInt(-1, 1);
-    if(Math.abs(this.xdir) + Math.abs(this.ydir) == 0) {
-        this.xdir = 1;
+    while(Math.abs(this.xdir) + Math.abs(this.ydir) == 0) {
+        this.xdir = Engine.randInt(-1, 1);
+        this.ydir = Engine.randInt(-1, 1);
     }
     this.aggression = a;
     this.alive = true;
     this.deadness = 0;
+    this.openFire = function() {
+        this.shooting = true;
+    }
+
+    this.ceaseFire = function() {
+        this.shooting = false;
+    }
+
+    this.shoot = function() {
+        var norm = Engine.dist(this.xdir, this.ydir, 0,0);
+        Engine.bullets.push(new Weapon(this.x, this.y, this.xdir/norm, this.ydir/norm, 1, 1));
+        this.shoot_cooldown = 10;
+    }
     this.update = function() {
         if(this.alive) {
             var cspeed = Math.abs(this.xdir) + Math.abs(this.ydir) == 2 ? Math.sqrt(this.speed/2) : this.speed;
@@ -25,14 +39,25 @@ function Npc(x,y,a) {
                 if(Math.abs(this.xdir) + Math.abs(this.ydir) == 0) {
                     this.xdir = 1;
                 }
-            }
-            else {
+            } else {
                 this.x = nx;
                 this.y = ny;
             }
 
             if (Engine.hitObject(this, Engine.player)) {
-            	Engine.player.onTouchEnemy();
+                Engine.player.onTouchEnemy();
+            }
+            if(this.shoot_cooldown>0) {
+                this.shoot_cooldown--;
+            } else if(this.shooting) {
+                this.shoot();
+                if(Math.random()*50<10) { // fire an expected 5 shots
+                    this.ceaseFire();
+                }
+            } else {
+                if(Math.random()*50<this.aggression/60) {
+                    this.openFire();
+                }
             }
         } else if(this.deadness<60) {
             this.deadness++;

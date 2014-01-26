@@ -42,7 +42,8 @@ Engine.update = function() {
         Engine.bullets[i].update();
         if(Engine.bullets[i].t<=0) {
             Engine.bullets[i].active = false;
-        } else {
+        } else if(Engine.bullets[i].who===0) {
+            // for bullets fired by the player, check for collision with enemy
             var bx = Engine.bullets[i].x, by = Engine.bullets[i].y;
             for(var j=0; j<=10; j++) {
                 var x = (ax*j+bx*(10-j))/10, y = (ay*j+by*(10-j))/10;
@@ -54,6 +55,17 @@ Engine.update = function() {
                         j=999;
                         break;
                     }
+                }
+            }
+        } else {
+            // for bullets fired by the NPCs, check for collision with player
+            var bx = Engine.bullets[i].x, by = Engine.bullets[i].y;
+            for(var j=0; j<=10; j++) {
+                var x = (ax*j+bx*(10-j))/10, y = (ay*j+by*(10-j))/10;
+                if(Engine.dist(x,y,Engine.player.x, Engine.player.y) < BULLET_SIZE+SPRITE_SIZE) {
+                    Engine.player.onTouchBullet();
+                    Engine.bullets[i].active = false;
+                    break;
                 }
             }
         }
@@ -343,7 +355,11 @@ Engine.draw = function() {
         if(!Engine.bullets[i].active) continue;
         Engine.ctx.beginPath();
         Engine.ctx.arc(Engine.bullets[i].x, Engine.bullets[i].y, BULLET_SIZE, 0, Math.PI*2, true);
-        Engine.ctx.fillStyle = '#000';
+        if(Engine.bullets[i].who===0) {
+            Engine.ctx.fillStyle = '#000';
+        } else {
+            Engine.ctx.fillStyle = '#f30';
+        }
         Engine.ctx.fill();
     }
 

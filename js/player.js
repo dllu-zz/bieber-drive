@@ -41,12 +41,14 @@ function Player(x,y) {
     }
 
     this.shoot = function() {
-        Engine.bullets.push(new Weapon(this.x, this.y, vx[this.facing], vy[this.facing], 1));
+        Engine.bullets.push(new Weapon(this.x, this.y, vx[this.facing], vy[this.facing], 1, 0));
+        this.aggression += 0.1;
         this.shoot_cooldown = 10;
     }
 
     this.dropGrenade = function() {
-        Engine.grenades.push(new Weapon(this.x, this.y, vx[this.facing], vy[this.facing], 0));
+        Engine.grenades.push(new Weapon(this.x, this.y, vx[this.facing], vy[this.facing], 0, 0));
+        this.aggression += 1;
     }
 
     this.update = function() {
@@ -117,5 +119,8 @@ function Player(x,y) {
 
     this.onTouchExplosion = function() {
         this.loseHealth(10);
+    }
+    this.onTouchBullet = function() {
+        this.loseHealth(4);
     }
 }
