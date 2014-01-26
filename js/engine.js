@@ -94,7 +94,7 @@ Engine.init = function() {
     Engine.player = new Player(0,0);
 
     // initialize first level
-    Engine.level(0);
+    Engine.level(3);
 
     // start the updates
     Engine.update();
