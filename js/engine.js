@@ -96,6 +96,9 @@ Engine.init = function() {
     // initialize first level
     Engine.level(0);
 
+    // get player element
+    Engine.$player = $('#player');
+
     // start the updates
     Engine.update();
 }
@@ -204,13 +207,16 @@ Engine.draw = function() {
     }
 
     function renderPlayer(direction, angle){
-            Engine.ctx.save();
-            Engine.ctx.translate(Engine.player.x, Engine.player.y);
-            Engine.ctx.rotate(angle);
-            Engine.ctx.translate(-Engine.player.x, -Engine.player.y);
-            var img = Engine.resourceCache[images[Engine.currentlevel].character[direction]];
-            Engine.ctx.drawImage(img, Engine.player.x, Engine.player.y);
-            Engine.ctx.restore();
+        Engine.$player.css({
+            'top':(Engine.player.y-16)+'px',
+            'left':(Engine.player.x-16)+'px',
+            'transform':'rotate('+angle+'deg)'
+        });
+        if(!direction) {
+            Engine.$player.removeClass('R');
+        } else {
+            Engine.$player.addClass('R');
+        }
     }
 
     //renderPlayer()
@@ -218,28 +224,28 @@ Engine.draw = function() {
     // draw the player
     switch (Engine.player.facing){
         case FACING_N:
-            renderPlayer("N", 0);
+            renderPlayer(true, -90);
         break;
         case FACING_E:
-            renderPlayer("E", 0);
+            renderPlayer(true, 0);
         break;
         case FACING_S:
-            renderPlayer("S", 0);
+            renderPlayer(false, -90);
         break;
         case FACING_W:
-            renderPlayer("W", 0);
+            renderPlayer(false, 0);
         break;
         case FACING_NE:
-            renderPlayer("NE", 270);
+            renderPlayer(true, -45);
         break;
         case FACING_SE:
-            renderPlayer("SE", 45*Math.PI/180);
+            renderPlayer(true, 45);
         break;
         case FACING_SW:
-            renderPlayer("SW", -45*Math.PI/180);
+            renderPlayer(false, -45);
         break;
         case FACING_NW:
-            renderPlayer("NW", 45*Math.PI/180);
+            renderPlayer(false, 45);
         break;
         default: console.log("MOTHERFUCKING GARBAGE PIECE OF HELL FUCKING SHIT");
     }
