@@ -34,6 +34,9 @@ function Npc(x,y,a) {
     }
     this.update = function() {
         if(this.alive) {
+            if (Engine.hitObject(this, Engine.player)) {
+                Engine.player.onTouchEnemy();
+            }
             if(this.stunned>0) {
                 this.stunned--;
                 return;
@@ -65,9 +68,6 @@ function Npc(x,y,a) {
                 this.y = ny;
             }
 
-            if (Engine.hitObject(this, Engine.player)) {
-                Engine.player.onTouchEnemy();
-            }
             if(this.shoot_cooldown>0) {
                 this.shoot_cooldown--;
             } else if(this.shooting) {

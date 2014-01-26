@@ -128,7 +128,7 @@ Engine.update = function() {
         Engine.win = false;
     }
     Engine.los = VisibilityPolygon.compute([Engine.player.x, Engine.player.y], Engine.seg);
-    if (levels[Engine.currentlevel].title === "animu"){
+    if (levels[Engine.currentlevel].title === "Triumph"){
         Engine.draw(100); 
     }
     else Engine.draw(34);
@@ -203,10 +203,11 @@ Engine.level = function(n) {
     $("#announce").css({'display': 'block'});
     // check if game has been beaten
     if(n>=levels.length) {
-        $('#announce').text("win");
+        //$('#announce').text("win");
         Engine.$viewport.css({'display':'none'});
         Engine.$player.css({'display':'none'});
         Engine.running = false;
+        Engine.showMessage(0,["In the end, the only person who can save you...", "... is yourself...", "You have found salvation."],function(){Engine.running = false;});
         return;
     }
 
