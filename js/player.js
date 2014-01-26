@@ -79,6 +79,7 @@ function Player(x,y) {
     this.onLoseLife = function() {
         this.lives -= 1;
         this.health = PLAYER_MAX_HEALTH;
+        Engine.level(Engine.currentlevel);
     }
 
     this.onTouch = function() {
