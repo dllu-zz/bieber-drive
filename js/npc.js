@@ -13,6 +13,12 @@ function Npc(x,y,a) {
     this.aggression = a;
     this.alive = true;
     this.deadness = 0;
+    this.deadparticles = [];
+    for(var i=0; i<5; i++) {
+        var r = Math.random();
+        var t = Math.random()*2*Math.PI;
+        this.deadparticles.push([r*Math.sin(t), r*Math.cos(t)]);
+    }
     this.openFire = function() {
         this.shooting = true;
     }
@@ -51,7 +57,7 @@ function Npc(x,y,a) {
                 this.shoot_cooldown--;
             } else if(this.shooting) {
                 this.shoot();
-                if(Math.random()*50<10) { // fire an expected 5 shots
+                if(Math.random()*30<10) { // fire an expected 3 shots
                     this.ceaseFire();
                 }
             } else {

@@ -3,6 +3,7 @@ var SPRITE_SIZE = 5;
 var GRENADE_SIZE = 3;
 var BULLET_SIZE = 2;
 var SPRITE_SPEED_MULTIPLIER = 2;
+var PARTICLE_SIZE = 3;
 
 var requestAnimFrame = 
     window.requestAnimationFrame || 
@@ -324,17 +325,27 @@ Engine.draw = function() {
     // draw npcs
     for(var i=0, _i=Engine.npc.length; i<_i; i++) {
         if(!Engine.npc[i].alive && Engine.npc[i].deadness>=60) continue;
-        Engine.ctx.beginPath();
-        Engine.ctx.arc(Engine.npc[i].x, Engine.npc[i].y, SPRITE_SIZE, 0, Math.PI*2, true);
-        if(Engine.npc[i].alive) {
+        var npc = Engine.npc[i];
+        if(npc.alive) {
+            Engine.ctx.beginPath();
+            Engine.ctx.arc(npc.x, npc.y, SPRITE_SIZE, 0, Math.PI*2, true);
             Engine.ctx.fillStyle = '#f30';
+            Engine.ctx.fill();
+            Engine.ctx.strokeStyle = '#000';
+            Engine.ctx.strokeWidth = '1px';
+            Engine.ctx.stroke();
         } else {
-            Engine.ctx.fillStyle = 'rgba(0,0,0,' + (1-Engine.npc[i].deadness/60.0) +')';
+            for(var j=0, _j=npc.deadparticles.length; j<_j; j++) {
+                var d = npc.deadness, dd = 1.5*Math.sqrt(d)+0.1*d;
+                Engine.ctx.beginPath();
+                Engine.ctx.arc(
+                    npc.x+npc.deadparticles[j][0]*dd, 
+                    npc.y+npc.deadparticles[j][1]*dd, 
+                    SPRITE_SIZE*(60-d)/60, 0, Math.PI*2, true);
+                Engine.ctx.fillStyle = 'rgba(0,0,0,' + (1-npc.deadness/60.0) +')';
+                Engine.ctx.fill();
+            }
         }
-        Engine.ctx.fill();
-        Engine.ctx.strokeStyle = '#000';
-        Engine.ctx.strokeWidth = '1px';
-        Engine.ctx.stroke();
     }
 
     // draw grenades
