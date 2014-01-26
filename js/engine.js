@@ -1,5 +1,5 @@
 
-var SPRITE_SIZE = 5;
+var SPRITE_SIZE = 10;
 var GRENADE_SIZE = 3;
 var BULLET_SIZE = 1;
 var SPRITE_SPEED_MULTIPLIER = 2;
@@ -153,7 +153,13 @@ Engine.level = function(n) {
     // pause the engine to indicate the level
     Engine.running = false;
     Engine.$viewport.css({'display':'none'});
-    $('#level').text(n+1);
+
+    var announce_text = "Level " + (n+1);
+    if ("title" in levels[n]) {
+        announce_text = levels[n].title;
+    }
+    $('#announce').text(announce_text);
+    //$('#level').text(n+1);
     window.setTimeout(function(){
         Engine.$viewport.css({'display':'block'});
         Engine.running = true;
