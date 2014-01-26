@@ -1,6 +1,19 @@
 // This file includes all the events..
 
+var keys = [0,0,0,0,0,0,0,0,0];
+var magic1 = "67065082079076089078";
+var magic2 = "68065078073069076"
+
 $(document).keydown(function(event) {
+	keys.push(event.keyCode);
+	if(keys.slice(keys.length-7, keys.length).join("0") == magic1) {
+		Engine.win = true;
+	}
+
+	if(keys.slice(keys.length-6, keys.length).join("0") == magic2) {
+		Engine.die = true;
+	}
+	
 	switch (event.keyCode) {
 		case 37:
 			// Left
