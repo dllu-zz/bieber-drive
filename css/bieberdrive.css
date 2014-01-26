@@ -91,6 +91,6 @@ body {
 	left: 110px;
 	background-color: #888;
 	height: 10px;
-	width: 0px;
+	width: 1000px;
 	transition: width 0.2s ease;
 }
