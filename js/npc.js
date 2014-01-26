@@ -15,8 +15,8 @@ function Npc(x,y,a) {
     this.update = function() {
         if(this.alive) {
             var cspeed = Math.abs(this.xdir) + Math.abs(this.ydir) == 2 ? Math.sqrt(this.speed/2) : this.speed;
-            var nx = this.x + cspeed * this.xdir;
-            var ny = this.y + cspeed * this.ydir;
+            var nx = this.x + cspeed * this.xdir * SPRITE_SPEED_MULTIPLIER;
+            var ny = this.y + cspeed * this.ydir * SPRITE_SPEED_MULTIPLIER;
             
             if(Engine.hitWall(this, nx, ny)) {
                 this.xdir = Engine.randInt(-1, 1);

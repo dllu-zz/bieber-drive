@@ -33,9 +33,9 @@ function Player(x,y) {
         var ny = 0;
 
         if (vert)
-            ny = ((this.flag_up ? -1 : 1) * (horz ? Math.sqrt(0.5) : 1));
+            ny = SPRITE_SPEED_MULTIPLIER * ((this.flag_up ? -1 : 1) * (horz ? Math.sqrt(0.5) : 1));
         if (horz)
-            nx = ((this.flag_left ? -1 : 1) * (vert ? Math.sqrt(0.5) : 1));
+            nx = SPRITE_SPEED_MULTIPLIER * ((this.flag_left ? -1 : 1) * (vert ? Math.sqrt(0.5) : 1));
 
         if (!Engine.hitWall(this, this.x + nx, this.y + ny)) {
             this.x += nx;

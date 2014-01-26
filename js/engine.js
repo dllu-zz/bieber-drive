@@ -1,6 +1,7 @@
 
 var SPRITE_SIZE = 5;
 var GRENADE_SIZE = 3;
+var SPRITE_SPEED_MULTIPLIER = 2;
 
 var requestAnimFrame = 
     window.requestAnimationFrame || 
