@@ -24,7 +24,10 @@ function Player(x,y) {
     this.flag_left = false;
 
     this.dropGrenade = function() {
-        Engine.grenades.push(new Weapon(this.x, this.y));
+        var s2 = Math.sqrt(0.5);
+        var vx = [0, 1, 0, -1, s2, s2, -s2, -s2];
+        var vy = [-1, 0, 1, 0, -s2, s2, s2, -s2];
+        Engine.grenades.push(new Weapon(this.x, this.y, vx[this.facing], vy[this.facing], 0));
     }
 
     this.update = function() {

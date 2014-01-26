@@ -31,13 +31,18 @@ Engine.update = function() {
 
     // update the grenades' fuse countdowns
     for(var i=0, _i=Engine.grenades.length; i<_i; i++) {
+        if(!Engine.grenades[i].active) continue;
         Engine.grenades[i].update();
-    }
 
-    // update the countdown for the explosions
-    // (since we want the explosions to stay on the screen for around 30 frames)
-    for(var i=0, _i=Engine.explosions.length; i<_i; i++) {
-        Engine.explosions[i].t--;
+        // for each exploding grenade, we have to make it explode and kill all NPCs in the vicinity
+        if(Engine.grenades[i].t>0) continue;
+
+        // compute explosion, remove grenade from the list
+        var boom = {
+            poly:VisibilityPolygon.compute([Engine.grenades[0].x, Engine.grenades[0].y], Engine.seg),
+            t: 30
+        }
+        Engine.explosions.push(boom);
         // kill all NPCs which are in the explosion
         for(var j=0, _j=Engine.npc.length; j<_j; j++) {
             if(Engine.npc[j].alive && VisibilityPolygon.inPolygon([Engine.npc[j].x, Engine.npc[j].y], Engine.explosions[i].poly)) {
@@ -48,24 +53,19 @@ Engine.update = function() {
         // Remove health of player
         if (VisibilityPolygon.inPolygon([Engine.player.x, Engine.player.y], Engine.explosions[i].poly))
             Engine.player.health--;
+
+        Engine.grenades[i].active = false;
     }
 
-    // for each exploding grenade, we have to make it explode and kill all NPCs in the vicinity
-    while(Engine.grenades.length>0 && Engine.grenades[0].t <=0) {
-        // compute explosion, remove grenade from the list
-        var boom = {
-            poly:VisibilityPolygon.compute([Engine.grenades[0].x, Engine.grenades[0].y], Engine.seg),
-            t: 30
-        }
-        Engine.explosions.push(boom);
+    // update the countdown for the explosions
+    // (since we want the explosions to stay on the screen for around 30 frames)
+    for(var i=0, _i=Engine.explosions.length; i<_i; i++) {
+        Engine.explosions[i].t--;
+    }
+
+    // remove all expired weapons
+    while(Engine.grenades.length>0 && !Engine.grenades[0].active) {
         Engine.grenades.shift();
-        // kill all NPCs which are in the explosion
-        for(var j=0, _j=Engine.npc.length; j<_j; j++) {
-            if(Engine.npc[j].alive && VisibilityPolygon.inPolygon([Engine.npc[j].x, Engine.npc[j].y], Engine.explosions[i].poly)) {
-                Engine.npc[j].alive = false;
-                Engine.player.aggression++;
-            }
-        }
     }
 
     // remove all expired explosions
@@ -90,9 +90,6 @@ Engine.init = function() {
     Engine.width = 1000;
     Engine.height = 600;
 
-    // load the images into the resource cache
-    Engine.loadLevelImages(0);
-
     /* I treat all devices as being Hi-DPI (i.e. a pixel ratio of 2)
     because even on normal displays, this looks better as it is like
     anti-aliasing. */
@@ -102,7 +99,7 @@ Engine.init = function() {
     Engine.viewport.style.width = Engine.width + 'px';
     Engine.viewport.style.height = Engine.height + 'px';
     Engine.ctx.scale(2, 2);
-    
+
     // get player element
     Engine.$player = $('#player');
 
@@ -112,33 +109,8 @@ Engine.init = function() {
     // initialize first level
     Engine.level(0);
 
-
     // start the updates
     Engine.update();
-}
-
-Engine.loadLevelImages = function(n){
-    Engine.resourceCache = {};
-    function load(url){
-        if (Engine.resourceCache[url]){
-            return Engine.resourceCache[url];
-        }
-        else {
-            var img = new Image();
-            img.onload = function(){
-                Engine.resourceCache[url] = img;
-            }
-        }
-        img.src = url;
-    }
-   // function get(url){
-   //     return Engine.resourceCache[url];
-   // }
-    for (var k in images[n]){
-        for (var orien in images[n][k]){
-            load(images[n][k][orien]);
-        }
-    }
 }
 
 
@@ -282,7 +254,7 @@ Engine.draw = function() {
 
     // draw npcs
     for(var i=0, _i=Engine.npc.length; i<_i; i++) {
-        if(!Engine.npc[i].alive && Engine.npc[i].deadness>60) continue;
+        if(!Engine.npc[i].alive && Engine.npc[i].deadness>=60) continue;
         Engine.ctx.beginPath();
         Engine.ctx.arc(Engine.npc[i].x, Engine.npc[i].y, SPRITE_SIZE, 0, Math.PI*2, true);
         if(Engine.npc[i].alive) {
@@ -291,16 +263,20 @@ Engine.draw = function() {
             Engine.ctx.fillStyle = 'rgba(0,0,0,' + (1-Engine.npc[i].deadness/60.0) +')';
         }
         Engine.ctx.fill();
+        Engine.ctx.strokeStyle = '#000';
+        Engine.ctx.strokeWidth = '1px';
+        Engine.ctx.stroke();
     }
 
     // draw grenades
     for(var i=0, _i=Engine.grenades.length; i<_i; i++) {
+        if(!Engine.grenades[i].active) continue;
         Engine.ctx.beginPath();
         Engine.ctx.arc(Engine.grenades[i].x, Engine.grenades[i].y, GRENADE_SIZE, 0, Math.PI*2, true);
         if(Engine.grenades[i].t%6<3) {
-            Engine.ctx.fillStyle = '#f30';
+            Engine.ctx.fillStyle = '#f00';
         } else {
-            Engine.ctx.fillStyle = '#58f';
+            Engine.ctx.fillStyle = '#00f';
         }
         Engine.ctx.fill();
     }
@@ -310,6 +286,9 @@ Engine.draw = function() {
     Engine.ctx.arc(Engine.goal.x, Engine.goal.y, SPRITE_SIZE, 0, Math.PI*2, true);
     Engine.ctx.fillStyle = '#3f3';
     Engine.ctx.fill();
+    Engine.ctx.strokeStyle = '#000';
+    Engine.ctx.strokeWidth = '1px';
+    Engine.ctx.stroke();
 
     $("#health").html(Engine.player.health);
 }
