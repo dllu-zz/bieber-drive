@@ -38,6 +38,16 @@ Engine.update = function() {
     // (since we want the explosions to stay on the screen for around 30 frames)
     for(var i=0, _i=Engine.explosions.length; i<_i; i++) {
         Engine.explosions[i].t--;
+        // kill all NPCs which are in the explosion
+        for(var j=0, _j=Engine.npc.length; j<_j; j++) {
+            if(Engine.npc[j].alive && VisibilityPolygon.inPolygon([Engine.npc[j].x, Engine.npc[j].y], Engine.explosions[i].poly)) {
+                Engine.npc[j].alive = false;
+                Engine.player.aggression++;
+            }
+        }
+        // Remove health of player
+        if (VisibilityPolygon.inPolygon([Engine.player.x, Engine.player.y], Engine.explosions[i].poly))
+            Engine.player.health--;
     }
 
     // for each exploding grenade, we have to make it explode and kill all NPCs in the vicinity
@@ -50,13 +60,12 @@ Engine.update = function() {
         Engine.explosions.push(boom);
         Engine.grenades.shift();
         // kill all NPCs which are in the explosion
-        for(var i=0, _i=Engine.npc.length; i<_i; i++) {
-            if(Engine.npc[i].alive && VisibilityPolygon.inPolygon([Engine.npc[i].x, Engine.npc[i].y], boom.poly)) {
-                Engine.npc[i].alive = false;
+        for(var j=0, _j=Engine.npc.length; j<_j; j++) {
+            if(Engine.npc[j].alive && VisibilityPolygon.inPolygon([Engine.npc[j].x, Engine.npc[j].y], Engine.explosions[i].poly)) {
+                Engine.npc[j].alive = false;
                 Engine.player.aggression++;
             }
         }
-        // TODO: kill player
     }
 
     // remove all expired explosions
@@ -210,28 +219,20 @@ Engine.draw = function() {
     // draw the player
     switch (Engine.player.facing) {
         case FACING_N:
-            //renderPlayer("N");
             break;
         case FACING_E:
-            //renderPlayer("E");
             break;
         case FACING_S:
-            //renderPlayer("S");
             break;
         case FACING_W:
-            //renderPlayer("W");
             break;
         case FACING_NE:
-            //renderPlayer("NE");
             break;
         case FACING_SE:
-            //renderPlayer("SE");
             break;
         case FACING_SW:
-            //renderPlayer("SW");
             break;
         case FACING_NW:
-            //renderPlayer("NW");
             break;
         default:
             console.log("Nothing happened");
@@ -240,40 +241,6 @@ Engine.draw = function() {
     Engine.ctx.arc(Engine.player.x, Engine.player.y, SPRITE_SIZE, 0, Math.PI*2, true);
     Engine.ctx.fillStyle = '#58f';
     Engine.ctx.fill();
-
-    /*function renderPlayer(direction){
-            var img = Engine.resourceCache[images[Engine.currentlevel].character[direction]];
-            Engine.ctx.drawImage(img, Engine.player.x, Engine.player.y);
-    }
-
-    // draw the player
-    switch (Engine.player.facing){
-        case FACING_N:
-            renderPlayer("N");
-        break;
-        case FACING_E:
-            renderPlayer("E");
-        break;
-        case FACING_S:
-            renderPlayer("S");
-        break;
-        case FACING_W:
-            renderPlayer("W");
-        break;
-        case FACING_NE:
-            renderPlayer("NE");
-        break;
-        case FACING_SE:
-            renderPlayer("SE");
-        break;
-        case FACING_SW:
-            renderPlayer("SW");
-        break;
-        case FACING_NW:
-            renderPlayer("NW");
-        break;
-        default: console.log("MOTHERFUCKING GARBAGE PIECE OF HELL FUCKING SHIT");
-    }*/
 
     // draw explosions
     for(var i=0, _i=Engine.explosions.length; i<_i; i++) {

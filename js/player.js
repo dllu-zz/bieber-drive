@@ -28,6 +28,9 @@ function Player(x,y) {
     }
 
     this.update = function() {
+        if (this.health == 0)
+            Engine.die == true;
+        
         var vert = (this.flag_up && !this.flag_down) || (!this.flag_up && this.flag_down);
         var horz = (this.flag_left && !this.flag_right) || (!this.flag_left && this.flag_right);
         var nx = 0;
