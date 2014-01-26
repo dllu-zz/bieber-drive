@@ -2,7 +2,8 @@
 
 var keys = [0,0,0,0,0,0,0,0,0];
 var magic1 = "67065082079076089078";
-var magic2 = "68065078073069076"
+var magic2 = "68065078073069076";
+var magic3 = "67072069069";
 
 $(document).keydown(function(event) {
 	keys.push(event.keyCode);
@@ -12,6 +13,20 @@ $(document).keydown(function(event) {
 
 	if(keys.slice(keys.length-6, keys.length).join("0") == magic2) {
 		Engine.die = true;
+	}
+
+	if(keys.slice(keys.length-4, keys.length).join("0") == magic3) {
+		for(var i = 0; i < Engine.width; i += 100) {
+			for(var j = 0; j < Engine.height; j += 100) {
+				if(!Engine.hitTest(i, j)) {
+					try {
+						Engine.grenades.push(new Weapon(i, j, 0));
+					}
+					catch(err) {
+					}
+				}
+			}
+		}
 	}
 	
 	switch (event.keyCode) {
