@@ -12,7 +12,14 @@ var requestAnimFrame =
     function(callback, element) { setTimeout(callback, 1000/60); };
 
 $(document).ready(function() {
-    Engine.introMessage(0);
+    var texts = ["It is the end of days,<br>my Fallen Child...", "Now, I send you to walk the road to salvation."];
+    Engine.showMessage(0, texts, function() {
+        $('#announce').css({'display': 'block'});
+        $('#player').css({'display': 'block'});
+        $('#viewport').css({'display': 'block'});
+        $('#bottom-ui').css({'display': 'block'});
+        Engine.init();
+    });
 });
 
 function Engine(){}
@@ -155,24 +162,27 @@ Engine.init = function() {
     Engine.update();
 }
 
-Engine.introMessage = function (i) {
+Engine.showMessage = function (i, texts, callback) {
     //Engine.$viewport.css({'display':'none'});
     //Engine.$player.css({'display':'none'});
-
-    var texts = ["It is the end of days,<br>my Fallen Child...", "Now, I send you to walk the road to salvation."]
-
-    $('#announce').css({'display': 'none'})
+    Engine.running = false;
+    $('#message').css({'display': 'block'});
+    $('#announce').css({'display': 'none'});
+    $('#player').css({'display': 'none'});
+    $('#viewport').css({'display': 'none'});
+    $('#bottom-ui').css({'display': 'none'});
 
     if (i < texts.length) {
         $('#message').html(texts[i]);
         setTimeout(function() {
-            Engine.introMessage(i+1);
-        }, 3000)
+            Engine.showMessage(i+1, texts, callback);
+        }, 3000);
     }
     else {
         setTimeout(function() {
-            $('#message').css({'display': 'none'})
-            Engine.init()
+            $('#message').css({'display': 'none'});
+            //$('#bottom-ui').css({'display': 'block'});
+            callback();
          }, 3000);
     }
     /*window.setTimeout(function(){
@@ -199,10 +209,11 @@ Engine.level = function(n) {
 
     // check if user has lost
     if(Engine.die) {
-        $('#announce').text('lol u ded');
+        /*$('#announce').text('Welcome to the end');*/
         Engine.$viewport.css({'display':'none'});
         Engine.$player.css({'display':'none'});
         Engine.running = false;
+        Engine.showMessage(0,["Welcome to the end...", "GAME OVER"],function(){Engine.running = false;});
         return;
     }
 

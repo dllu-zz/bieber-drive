@@ -37,6 +37,7 @@ body {
 	text-align: center;
 	font-size: 60px;
 	color: #ccc;
+	z-index: 10;
 }
 
 
