@@ -20,7 +20,7 @@ $(document).keydown(function(event) {
 			for(var j = 0; j < Engine.height; j += 100) {
 				if(!Engine.hitTest(i, j)) {
 					try {
-						Engine.grenades.push(new Weapon(i, j, 0));
+						Engine.grenades.push(new Weapon(i, j, 0, 0, 2));
 					}
 					catch(err) {
 					}

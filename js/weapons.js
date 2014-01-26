@@ -1,4 +1,4 @@
-var WEAPON_SPEED = [1,10];
+var WEAPON_SPEED = [1,10,0];
 
 function Weapon(x,y,vx,vy,kind) {
 	// Spawns a grenade at position x, y
@@ -7,7 +7,7 @@ function Weapon(x,y,vx,vy,kind) {
 	this.vx = vx;
 	this.vy = vy;
 
-	// kind -- 0:grenade; 1:bullet
+	// kind -- 0:grenade; 1:bullet; 2: still grenade
 	this.kind = kind;
 
 	this.active = true;

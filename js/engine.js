@@ -39,7 +39,7 @@ Engine.update = function() {
 
         // compute explosion, remove grenade from the list
         var boom = {
-            poly:VisibilityPolygon.compute([Engine.grenades[0].x, Engine.grenades[0].y], Engine.seg),
+            poly:VisibilityPolygon.compute([Engine.grenades[i].x, Engine.grenades[i].y], Engine.seg),
             t: 30
         }
         Engine.explosions.push(boom);
