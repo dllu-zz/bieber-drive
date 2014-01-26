@@ -386,8 +386,11 @@ Engine.draw = function() {
     Engine.ctx.strokeStyle = '#000';
     Engine.ctx.strokeWidth = '1px';
     Engine.ctx.stroke();
-
-    $("#lives").html("Lives: " + Engine.player.lives);
+    var s = '';
+    for(var i=0; i<Engine.player.lives; i++) {
+        s += '♥'
+    }
+    $("#lives").html(s);
     $("#health").html("Health: " + Engine.player.health.toFixed(1));
     $('#healthbar').css({'width': (Engine.player.health/PLAYER_MAX_HEALTH*Engine.width)+'px'})
 }

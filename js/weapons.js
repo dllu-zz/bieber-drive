@@ -27,8 +27,9 @@ function Weapon(x,y,vx,vy,kind, who) {
 	this.update = function() {
 		this.t--;
 		var speed = WEAPON_SPEED[this.kind];
-		if(Engine.hitTest(this.x+speed*this.vx, this.y+speed*this.vy)) {
-			console.log('Weapon of kind', this.kind, 'hit the wall');
+		if(this.kind === 0 && Engine.hitWall(this, this.x+speed*this.vx, this.y+speed*this.vy) ||
+			Engine.hitTest(this.x+speed*this.vx, this.y+speed*this.vy)) {
+			// console.log('Weapon of kind', this.kind, 'hit the wall');
 			this.t=0;
 		} else {
 			this.x += speed*this.vx;
