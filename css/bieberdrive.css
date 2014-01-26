@@ -30,15 +30,20 @@ body {
 	position: absolute;
 	top: 0px;
 	left:0px;
-	width: 33px;
-	height: 35px;
-	background: url('../resources/images/scratch_left.jpg') top left no-repeat;
+	width: 11px;
+	height: 11px;
+	background: url('../resources/images/player.svg') center no-repeat;
 	transform-origin: center;
 	-moz-transform-origin: center;
 	-webkit-transform-origin: center;
-	transition: transform 0.1s ease;
 }
 
 #player.R {
-	background: url('../resources/images/scratch_right.jpg') top left no-repeat;
+	background: url('../resources/images/player_r.svg') center no-repeat;
+}
+#health {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	color: white;
 }

@@ -1,4 +1,8 @@
 
+var SPRITE_SIZE = 5;
+var GRENADE_SIZE = 3;
+var BULLET_SIZE = 1;
+var SPRITE_SPEED_MULTIPLIER = 2;
 
 var requestAnimFrame = 
     window.requestAnimationFrame || 
@@ -34,6 +38,16 @@ Engine.update = function() {
     // (since we want the explosions to stay on the screen for around 30 frames)
     for(var i=0, _i=Engine.explosions.length; i<_i; i++) {
         Engine.explosions[i].t--;
+        // kill all NPCs which are in the explosion
+        for(var j=0, _j=Engine.npc.length; j<_j; j++) {
+            if(Engine.npc[j].alive && VisibilityPolygon.inPolygon([Engine.npc[j].x, Engine.npc[j].y], Engine.explosions[i].poly)) {
+                Engine.npc[j].alive = false;
+                Engine.player.aggression++;
+            }
+        }
+        // Remove health of player
+        if (VisibilityPolygon.inPolygon([Engine.player.x, Engine.player.y], Engine.explosions[i].poly))
+            Engine.player.health--;
     }
 
     // for each exploding grenade, we have to make it explode and kill all NPCs in the vicinity
@@ -46,13 +60,12 @@ Engine.update = function() {
         Engine.explosions.push(boom);
         Engine.grenades.shift();
         // kill all NPCs which are in the explosion
-        for(var i=0, _i=Engine.npc.length; i<_i; i++) {
-            if(Engine.npc[i].alive && VisibilityPolygon.inPolygon([Engine.npc[i].x, Engine.npc[i].y], boom.poly)) {
-                Engine.npc[i].alive = false;
+        for(var j=0, _j=Engine.npc.length; j<_j; j++) {
+            if(Engine.npc[j].alive && VisibilityPolygon.inPolygon([Engine.npc[j].x, Engine.npc[j].y], Engine.explosions[i].poly)) {
+                Engine.npc[j].alive = false;
                 Engine.player.aggression++;
             }
         }
-        // TODO: kill player
     }
 
     // remove all expired explosions
@@ -63,7 +76,7 @@ Engine.update = function() {
     // level up
     if(Engine.dist(Engine.player.x, Engine.player.y, Engine.goal.x, Engine.goal.y) < 5 || Engine.win) {
         Engine.level(Engine.currentlevel+1);
-	Engine.win = false;
+        Engine.win = false;
     }
 
     Engine.draw();
@@ -89,6 +102,9 @@ Engine.init = function() {
     Engine.viewport.style.width = Engine.width + 'px';
     Engine.viewport.style.height = Engine.height + 'px';
     Engine.ctx.scale(2, 2);
+    
+    // get player element
+    Engine.$player = $('#player');
 
     // set up the new player
     Engine.player = new Player(0,0);
@@ -96,8 +112,6 @@ Engine.init = function() {
     // initialize first level
     Engine.level(0);
 
-    // get player element
-    Engine.$player = $('#player');
 
     // start the updates
     Engine.update();
@@ -136,6 +150,7 @@ Engine.level = function(n) {
     if(n>=levels.length) {
         $('#announce').text("Win");
         Engine.$viewport.css({'display':'none'});
+        Engine.$player.css({'display':'none'});
         Engine.running = false;
         return;
     }
@@ -143,9 +158,11 @@ Engine.level = function(n) {
     // pause the engine to indicate the level
     Engine.running = false;
     Engine.$viewport.css({'display':'none'});
+    Engine.$player.css({'display':'none'});
     $('#level').text(n+1);
     window.setTimeout(function(){
         Engine.$viewport.css({'display':'block'});
+        Engine.$player.css({'display':'block'});
         Engine.running = true;
     }, 2000);
 
@@ -208,8 +225,8 @@ Engine.draw = function() {
 
     function renderPlayer(direction, angle){
         Engine.$player.css({
-            'top':(Engine.player.y-16)+'px',
-            'left':(Engine.player.x-16)+'px',
+            'top':(Engine.player.y-Engine.$player.height()/2)+'px',
+            'left':(Engine.player.x-Engine.$player.width()/2)+'px',
             'transform':'rotate('+angle+'deg)'
         });
         if(!direction) {
@@ -218,9 +235,8 @@ Engine.draw = function() {
             Engine.$player.addClass('R');
         }
     }
-
     // draw the player
-    switch (Engine.player.facing){
+    switch (Engine.player.facing) {
         case FACING_N:
             renderPlayer(true, -90);
         break;
@@ -247,6 +263,11 @@ Engine.draw = function() {
         break;
         default: console.log("MOTHERFUCKING GARBAGE PIECE OF HELL FUCKING SHIT");
     }
+    // Engine.ctx.beginPath();
+    // Engine.ctx.arc(Engine.player.x, Engine.player.y, SPRITE_SIZE, 0, Math.PI*2, true);
+    // Engine.ctx.fillStyle = '#f30';
+    // Engine.ctx.fill();
+
     // draw explosions
     for(var i=0, _i=Engine.explosions.length; i<_i; i++) {
         var polygon = Engine.explosions[i].poly;
@@ -263,7 +284,7 @@ Engine.draw = function() {
     for(var i=0, _i=Engine.npc.length; i<_i; i++) {
         if(!Engine.npc[i].alive && Engine.npc[i].deadness>60) continue;
         Engine.ctx.beginPath();
-        Engine.ctx.arc(Engine.npc[i].x, Engine.npc[i].y, 5, 0, Math.PI*2, true);
+        Engine.ctx.arc(Engine.npc[i].x, Engine.npc[i].y, SPRITE_SIZE, 0, Math.PI*2, true);
         if(Engine.npc[i].alive) {
             Engine.ctx.fillStyle = '#f30';
         } else {
@@ -275,7 +296,7 @@ Engine.draw = function() {
     // draw grenades
     for(var i=0, _i=Engine.grenades.length; i<_i; i++) {
         Engine.ctx.beginPath();
-        Engine.ctx.arc(Engine.grenades[i].x, Engine.grenades[i].y, 3, 0, Math.PI*2, true);
+        Engine.ctx.arc(Engine.grenades[i].x, Engine.grenades[i].y, GRENADE_SIZE, 0, Math.PI*2, true);
         if(Engine.grenades[i].t%6<3) {
             Engine.ctx.fillStyle = '#f30';
         } else {
@@ -286,9 +307,11 @@ Engine.draw = function() {
 
     // draw goal
     Engine.ctx.beginPath();
-    Engine.ctx.arc(Engine.goal.x, Engine.goal.y, 5, 0, Math.PI*2, true);
+    Engine.ctx.arc(Engine.goal.x, Engine.goal.y, SPRITE_SIZE, 0, Math.PI*2, true);
     Engine.ctx.fillStyle = '#3f3';
     Engine.ctx.fill();
+
+    $("#health").html(Engine.player.health);
 }
 
 Engine.hitTest = function(x, y) {
@@ -299,12 +322,30 @@ Engine.hitTest = function(x, y) {
     return false;
 }
 
+Engine.hitWall = function(obj, x, y) {
+    for (var i = 0; i < 40; i++) {
+        var theta = i * Math.PI / 20;
+        var dx = obj.size * Math.cos(theta);
+        var dy = obj.size * Math.sin(theta);
+        if (Engine.hitTest(x + dx, y + dy)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+Engine.hitObject = function(obj1, obj2) {
+    var dx = obj1.x - obj2.x;
+    var dy = obj1.y - obj2.y;
+    return Math.sqrt((dx * dx) + (dy * dy)) < obj1.size + obj2.size;
+}
+
 Engine.dist = function(ax, ay, bx, by) {
     return Math.sqrt((ax-=bx)*ax + (ay-=by)*ay);
 }
 
 Engine.randInt = function(lo, hi) {
-	return ~~(Math.random() * (hi - lo + 1)) + lo;
+    return ~~(Math.random() * (hi - lo + 1)) + lo;
 }
 
 Engine.win = false;
