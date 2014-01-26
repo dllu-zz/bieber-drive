@@ -115,9 +115,9 @@ Engine.loadLevelImages = function(n){
         }
         img.src = url;
     }
-    function get(url){
-        return Engine.resourceCache[url];
-    }
+   // function get(url){
+   //     return Engine.resourceCache[url];
+   // }
     for (var k in images[n]){
         for (var orien in images[n][k]){
             load(images[n][k][orien]);
