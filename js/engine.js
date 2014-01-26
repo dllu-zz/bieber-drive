@@ -1,4 +1,6 @@
 
+var SPRITE_SIZE = 5;
+var GRENADE_SIZE = 3;
 
 var requestAnimFrame = 
     window.requestAnimationFrame || 
@@ -63,7 +65,7 @@ Engine.update = function() {
     // level up
     if(Engine.dist(Engine.player.x, Engine.player.y, Engine.goal.x, Engine.goal.y) < 5 || Engine.win) {
         Engine.level(Engine.currentlevel+1);
-	Engine.win = false;
+        Engine.win = false;
     }
 
     Engine.draw();
@@ -203,7 +205,41 @@ Engine.draw = function() {
         Engine.ctx.fill();
     }
 
-    function renderPlayer(direction){
+    // draw the player
+    switch (Engine.player.facing) {
+        case FACING_N:
+            //renderPlayer("N");
+            break;
+        case FACING_E:
+            //renderPlayer("E");
+            break;
+        case FACING_S:
+            //renderPlayer("S");
+            break;
+        case FACING_W:
+            //renderPlayer("W");
+            break;
+        case FACING_NE:
+            //renderPlayer("NE");
+            break;
+        case FACING_SE:
+            //renderPlayer("SE");
+            break;
+        case FACING_SW:
+            //renderPlayer("SW");
+            break;
+        case FACING_NW:
+            //renderPlayer("NW");
+            break;
+        default:
+            console.log("Nothing happened");
+    }
+    Engine.ctx.beginPath();
+    Engine.ctx.arc(Engine.player.x, Engine.player.y, SPRITE_SIZE, 0, Math.PI*2, true);
+    Engine.ctx.fillStyle = '#58f';
+    Engine.ctx.fill();
+
+    /*function renderPlayer(direction){
             var img = Engine.resourceCache[images[Engine.currentlevel].character[direction]];
             Engine.ctx.drawImage(img, Engine.player.x, Engine.player.y);
     }
@@ -235,7 +271,8 @@ Engine.draw = function() {
             renderPlayer("NW");
         break;
         default: console.log("MOTHERFUCKING GARBAGE PIECE OF HELL FUCKING SHIT");
-    }
+    }*/
+
     // draw explosions
     for(var i=0, _i=Engine.explosions.length; i<_i; i++) {
         var polygon = Engine.explosions[i].poly;
@@ -252,7 +289,7 @@ Engine.draw = function() {
     for(var i=0, _i=Engine.npc.length; i<_i; i++) {
         if(!Engine.npc[i].alive && Engine.npc[i].deadness>60) continue;
         Engine.ctx.beginPath();
-        Engine.ctx.arc(Engine.npc[i].x, Engine.npc[i].y, 5, 0, Math.PI*2, true);
+        Engine.ctx.arc(Engine.npc[i].x, Engine.npc[i].y, SPRITE_SIZE, 0, Math.PI*2, true);
         if(Engine.npc[i].alive) {
             Engine.ctx.fillStyle = '#f30';
         } else {
@@ -264,7 +301,7 @@ Engine.draw = function() {
     // draw grenades
     for(var i=0, _i=Engine.grenades.length; i<_i; i++) {
         Engine.ctx.beginPath();
-        Engine.ctx.arc(Engine.grenades[i].x, Engine.grenades[i].y, 3, 0, Math.PI*2, true);
+        Engine.ctx.arc(Engine.grenades[i].x, Engine.grenades[i].y, GRENADE_SIZE, 0, Math.PI*2, true);
         if(Engine.grenades[i].t%6<3) {
             Engine.ctx.fillStyle = '#f30';
         } else {
@@ -275,7 +312,7 @@ Engine.draw = function() {
 
     // draw goal
     Engine.ctx.beginPath();
-    Engine.ctx.arc(Engine.goal.x, Engine.goal.y, 5, 0, Math.PI*2, true);
+    Engine.ctx.arc(Engine.goal.x, Engine.goal.y, SPRITE_SIZE, 0, Math.PI*2, true);
     Engine.ctx.fillStyle = '#3f3';
     Engine.ctx.fill();
 }
@@ -293,7 +330,7 @@ Engine.dist = function(ax, ay, bx, by) {
 }
 
 Engine.randInt = function(lo, hi) {
-	return ~~(Math.random() * (hi - lo + 1)) + lo;
+    return ~~(Math.random() * (hi - lo + 1)) + lo;
 }
 
 Engine.win = false;
