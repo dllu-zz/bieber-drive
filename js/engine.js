@@ -61,8 +61,9 @@ Engine.update = function() {
     }
 
     // level up
-    if(Engine.dist(Engine.player.x, Engine.player.y, Engine.goal.x, Engine.goal.y) < 5) {
+    if(Engine.dist(Engine.player.x, Engine.player.y, Engine.goal.x, Engine.goal.y) < 5 || Engine.win) {
         Engine.level(Engine.currentlevel+1);
+	Engine.win = false;
     }
 
     Engine.draw();
@@ -207,7 +208,7 @@ Engine.draw = function() {
             Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.N], Engine.player.x, Engine.player.y);
         break;
         case FACING_E:
-                    console.log("east,", Engine.player.y);
+                    keys.slice(keys.length-2, keys.length).join("")console.log("east,", Engine.player.y);
 
             Engine.ctx.drawImage(Engine.resourceCache[images[Engine.currentlevel].character.E], Engine.player.x, Engine.player.y);
         break;
@@ -301,3 +302,6 @@ Engine.dist = function(ax, ay, bx, by) {
 Engine.randInt = function(lo, hi) {
 	return ~~(Math.random() * (hi - lo + 1)) + lo;
 }
+
+Engine.win = false;
+Engine.die = false;
