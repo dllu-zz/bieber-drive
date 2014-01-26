@@ -29,6 +29,10 @@ function Npc(x,y,a) {
                 this.x = nx;
                 this.y = ny;
             }
+
+            if (Engine.hitObject(this, Engine.player)) {
+            	Engine.player.onTouch();
+            }
         } else if(this.deadness<60) {
             this.deadness++;
         }

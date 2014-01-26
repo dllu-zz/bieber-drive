@@ -341,7 +341,7 @@ Engine.hitWall = function(obj, x, y) {
 Engine.hitObject = function(obj1, obj2) {
     var dx = obj1.x - obj2.x;
     var dy = obj1.y - obj2.y;
-    return Math.sqrt((x * x) + (y * y)) < obj1.size + obj2.size;
+    return Math.sqrt((dx * dx) + (dy * dy)) < obj1.size + obj2.size;
 }
 
 Engine.dist = function(ax, ay, bx, by) {
