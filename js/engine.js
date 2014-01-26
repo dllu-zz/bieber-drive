@@ -203,18 +203,79 @@ Engine.draw = function() {
         Engine.ctx.fill();
     }
 
+    function tweakX(x, direction){
+        switch (direction) {
+            case FACING_N:
+                return x;
+            break;
+            case FACING_E:
+                return x;
+            break;
+            case FACING_S:
+                return x;
+            break;
+            case FACING_W:
+                return x;
+            break;
+            case FACING_NE:
+                return x;
+            break;
+            case FACING_SE:
+                return x;
+            break;
+            case FACING_SW:
+                return x;
+            break;
+            case FACING_NW:
+                return x;
+            break;
+        }
+    }
+
+    function tweakY(y, direction){
+        switch (direction) {
+            case FACING_N:
+                return y;
+            break;
+            case FACING_E:
+                return y;
+            break;
+            case FACING_S:
+                return y;
+            break;
+            case FACING_W:
+                return y;
+            break;
+            case FACING_NE:
+                return y;
+            break;
+            case FACING_SE:
+                return y;
+            break;
+            case FACING_SW:
+                return y;
+            break;
+            case FACING_NW:
+                return y;
+            break;
+        }
+    }
+
     function renderPlayer(direction, angle){
+            //var _x = tweakX(Engine.player.x, direction);
+            //var _y = tweakY(Engine.player.y, direction);
+            var _x = Engine.player.x;
+            var _y = Engine.player.y;
             Engine.ctx.save();
-            Engine.ctx.translate(Engine.player.x, Engine.player.y);
+            Engine.ctx.translate(_x, _y);
             Engine.ctx.rotate(angle);
-            Engine.ctx.translate(-Engine.player.x, -Engine.player.y);
+            Engine.ctx.translate(-_x, -_y);
             var img = Engine.resourceCache[images[Engine.currentlevel].character[direction]];
-            Engine.ctx.drawImage(img, Engine.player.x, Engine.player.y);
+            Engine.ctx.drawImage(img, _x, _y);
             Engine.ctx.restore();
     }
 
     //renderPlayer()
-
     // draw the player
     switch (Engine.player.facing){
         case FACING_N:
