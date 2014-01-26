@@ -25,3 +25,10 @@ body {
 	top: 0px;
 	left: 0px;
 }
+
+#health {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	color: white;
+}
