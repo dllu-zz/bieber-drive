@@ -47,6 +47,13 @@ $(document).keydown(function(event) {
 			Engine.player.flag_down = true;
 			break;
 		default:
+			switch (event.which) {
+				case 69: // 'e'
+					Engine.player.openFire();
+					break;
+				default:
+					break;
+			}
 			break;
 	}
 });
@@ -74,6 +81,13 @@ $(document).keyup(function(event) {
 			Engine.player.flag_down = false;
 			break;
 		default:
+			switch (event.which) {
+				case 69: // 'e'
+					Engine.player.ceaseFire();
+					break;
+				default:
+					break;
+			}
 			break;
 	}
 });

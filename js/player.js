@@ -8,6 +8,10 @@ var FACING_SE = 5;
 var FACING_SW = 6;
 var FACING_NW = 7;
 
+var s2 = Math.sqrt(0.5);
+var vx = [0, 1, 0, -1, s2, s2, -s2, -s2];
+var vy = [-1, 0, 1, 0, -s2, s2, s2, -s2];
+
 function Player(x,y) {
     // Spawns a Player at x,y
     this.x = x;
@@ -23,16 +27,35 @@ function Player(x,y) {
     this.flag_right = false;
     this.flag_left = false;
 
+    this.shooting = false;
+    this.shoot_cooldown = 0;
+
+    this.openFire = function() {
+        this.shooting = true;
+    }
+
+    this.ceaseFire = function() {
+        this.shooting = false;
+    }
+
+    this.shoot = function() {
+        Engine.bullets.push(new Weapon(this.x, this.y, vx[this.facing], vy[this.facing], 1));
+        this.shoot_cooldown = 10;
+    }
+
     this.dropGrenade = function() {
-        var s2 = Math.sqrt(0.5);
-        var vx = [0, 1, 0, -1, s2, s2, -s2, -s2];
-        var vy = [-1, 0, 1, 0, -s2, s2, s2, -s2];
         Engine.grenades.push(new Weapon(this.x, this.y, vx[this.facing], vy[this.facing], 0));
     }
 
     this.update = function() {
-        if (this.health == 0)
+        if (this.health <= 0)
             Engine.die == true;
+
+        if(this.shoot_cooldown>0) {
+            this.shoot_cooldown--;
+        } else if(this.shooting) {
+            this.shoot();
+        }
         
         var vert = (this.flag_up && !this.flag_down) || (!this.flag_up && this.flag_down);
         var horz = (this.flag_left && !this.flag_right) || (!this.flag_left && this.flag_right);
@@ -40,9 +63,9 @@ function Player(x,y) {
         var ny = 0;
 
         if (vert)
-            ny = SPRITE_SPEED_MULTIPLIER * ((this.flag_up ? -1 : 1) * (horz ? Math.sqrt(0.5) : 1));
+            ny = SPRITE_SPEED_MULTIPLIER * ((this.flag_up ? -1 : 1) * (horz ? s2 : 1));
         if (horz)
-            nx = SPRITE_SPEED_MULTIPLIER * ((this.flag_left ? -1 : 1) * (vert ? Math.sqrt(0.5) : 1));
+            nx = SPRITE_SPEED_MULTIPLIER * ((this.flag_left ? -1 : 1) * (vert ? s2 : 1));
 
         if (!Engine.hitWall(this, this.x + nx, this.y + ny)) {
             this.x += nx;

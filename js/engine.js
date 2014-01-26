@@ -1,7 +1,7 @@
 
 var SPRITE_SIZE = 5;
 var GRENADE_SIZE = 3;
-var BULLET_SIZE = 1;
+var BULLET_SIZE = 2;
 var SPRITE_SPEED_MULTIPLIER = 2;
 
 var requestAnimFrame = 
@@ -29,6 +29,40 @@ Engine.update = function() {
         Engine.npc[i].update();
     }
 
+    // update the countdown for the explosions
+    // (since we want the explosions to stay on the screen for around 30 frames)
+    for(var i=0, _i=Engine.explosions.length; i<_i; i++) {
+        Engine.explosions[i].t--;
+    }
+
+    // update bullet trajectories
+    for(var i=0, _i=Engine.bullets.length; i<_i; i++) {
+        if(!Engine.bullets[i].active) continue;
+        var ax = Engine.bullets[i].x, ay = Engine.bullets[i].y;
+        Engine.bullets[i].update();
+        if(Engine.bullets[i].t<=0) {
+            Engine.bullets[i].active = false;
+        } else {
+            var bx = Engine.bullets[i].x, by = Engine.bullets[i].y;
+            for(var j=0; j<=10; j++) {
+                var x = (ax*j+bx*(10-j))/10, y = (ay*j+by*(10-j))/10;
+                for(var k=0, _k=Engine.npc.length; k<_k; k++) {
+                    if(Engine.npc[k].alive && Engine.dist(x,y,Engine.npc[k].x, Engine.npc[k].y) < BULLET_SIZE+SPRITE_SIZE) {
+                        Engine.npc[k].alive = false;
+                        Engine.player.aggression++;
+                        Engine.bullets[i].active = false;
+                        j=999;
+                        break;
+                    }
+                }
+            }
+        }
+    }    
+    // remove all expired bullets
+    while(Engine.bullets.length>0 && !Engine.bullets[0].active) {
+        Engine.bullets.shift();
+    }
+
     // update the grenades' fuse countdowns
     for(var i=0, _i=Engine.grenades.length; i<_i; i++) {
         if(!Engine.grenades[i].active) continue;
@@ -52,18 +86,12 @@ Engine.update = function() {
         }
         // Remove health of player
         if (VisibilityPolygon.inPolygon([Engine.player.x, Engine.player.y], Engine.explosions[i].poly))
-            Engine.player.health--;
+            Engine.player.health-=10;
 
         Engine.grenades[i].active = false;
     }
 
-    // update the countdown for the explosions
-    // (since we want the explosions to stay on the screen for around 30 frames)
-    for(var i=0, _i=Engine.explosions.length; i<_i; i++) {
-        Engine.explosions[i].t--;
-    }
-
-    // remove all expired weapons
+    // remove all expired grenades
     while(Engine.grenades.length>0 && !Engine.grenades[0].active) {
         Engine.grenades.shift();
     }
@@ -78,7 +106,15 @@ Engine.update = function() {
         Engine.level(Engine.currentlevel+1);
         Engine.win = false;
     }
-
+    if(Engine.player.health<=0) {
+        Engine.die = true;
+    }
+    if(Engine.die) {
+        $('#announce').text("lol u ded");
+        Engine.$viewport.css({'display':'none'});
+        Engine.$player.css({'display':'none'});
+        Engine.running = false;
+    }
     Engine.draw();
 }
 
@@ -120,7 +156,7 @@ Engine.level = function(n) {
 
     // check if game has been beaten
     if(n>=levels.length) {
-        $('#announce').text("Win");
+        $('#announce').text("win");
         Engine.$viewport.css({'display':'none'});
         Engine.$player.css({'display':'none'});
         Engine.running = false;
@@ -157,6 +193,9 @@ Engine.level = function(n) {
 
     // clear the list of NPCs
     Engine.npc = []; // list of Npc objects
+
+    // clear the list of bullets
+    Engine.bullets = [];
 
     // clear the list of grenades
     Engine.grenades = []; // list of Weapon objects
@@ -293,6 +332,15 @@ Engine.draw = function() {
         Engine.ctx.fill();
     }
 
+    // draw bullets
+    for(var i=0, _i=Engine.bullets.length; i<_i; i++) {
+        if(!Engine.bullets[i].active) continue;
+        Engine.ctx.beginPath();
+        Engine.ctx.arc(Engine.bullets[i].x, Engine.bullets[i].y, BULLET_SIZE, 0, Math.PI*2, true);
+        Engine.ctx.fillStyle = '#000';
+        Engine.ctx.fill();
+    }
+
     // draw goal
     Engine.ctx.beginPath();
     Engine.ctx.arc(Engine.goal.x, Engine.goal.y, SPRITE_SIZE, 0, Math.PI*2, true);
@@ -326,9 +374,7 @@ Engine.hitWall = function(obj, x, y) {
 }
 
 Engine.hitObject = function(obj1, obj2) {
-    var dx = obj1.x - obj2.x;
-    var dy = obj1.y - obj2.y;
-    return Math.sqrt((dx * dx) + (dy * dy)) < obj1.size + obj2.size;
+    return Engine.dist(obj1.x, obj1.y, obj2.x, obj2.y) < obj1.size + obj2.size;
 }
 
 Engine.dist = function(ax, ay, bx, by) {

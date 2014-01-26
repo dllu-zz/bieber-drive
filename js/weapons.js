@@ -11,6 +11,11 @@ function Weapon(x,y,vx,vy,kind) {
 	this.kind = kind;
 
 	this.active = true;
+	if(this.kind === 0) {
+		this.size = GRENADE_SIZE;
+	} else if(this.kind === 1) {
+		this.size = BULLET_SIZE;
+	}
 
 	console.log("created a weapon",x,y,vx,vy,kind);
 
