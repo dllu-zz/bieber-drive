@@ -219,8 +219,6 @@ Engine.draw = function() {
         }
     }
 
-    //renderPlayer()
-
     // draw the player
     switch (Engine.player.facing){
         case FACING_N:
