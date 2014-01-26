@@ -63,15 +63,23 @@ body {
 }
 #health {
 	position: absolute;
-	bottom: 10px;
+	bottom: 15px;
 	right: 10px;
+	color: #ccc;
+}
+
+#killz {
+	position: absolute;
+	top: 597px;
+	right: 10px;
+	font-size: 20px;
 	color: #ccc;
 }
 
 #lives {
 	position: absolute;
-	top: 620px;
-	left: 10px;
+	top: 590px;
+	left: 0px;
 	color: #ccc;
 	line-height: 50px;
 	font-size: 50px;
@@ -80,9 +88,9 @@ body {
 #healthbar {
 	position: absolute;
 	top: 605px;
-	left: 0px;
+	left: 110px;
 	background-color: #888;
 	height: 10px;
-	width: 100px;
+	width: 0px;
 	transition: width 0.2s ease;
 }

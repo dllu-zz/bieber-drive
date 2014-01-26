@@ -20,6 +20,7 @@ function Player(x,y) {
     this.y = y;
     this.size = SPRITE_SIZE;
     this.aggression = 0;
+    this.killz = 0;
     this.lives = 3;
     this.health = PLAYER_MAX_HEALTH;
     this.facing = FACING_E;

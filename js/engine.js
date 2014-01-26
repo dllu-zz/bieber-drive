@@ -52,6 +52,7 @@ Engine.update = function() {
                     if(Engine.npc[k].alive && Engine.dist(x,y,Engine.npc[k].x, Engine.npc[k].y) < BULLET_SIZE+SPRITE_SIZE) {
                         Engine.npc[k].alive = false;
                         Engine.player.aggression++;
+                        Engine.player.killz++;
                         Engine.bullets[i].active = false;
                         j=999;
                         break;
@@ -434,8 +435,9 @@ Engine.draw = function() {
         s += '♥'
     }
     $("#lives").html(s);
-    $("#health").html("Health: " + Engine.player.health.toFixed(1));
-    $('#healthbar').css({'width': (Engine.player.health/PLAYER_MAX_HEALTH*Engine.width)+'px'})
+    //$("#health").html("Health: " + Engine.player.health.toFixed(1));
+    $('#healthbar').css({'width': (Engine.player.health/PLAYER_MAX_HEALTH*850)+'px'})
+    $("#killz").html(Engine.player.killz);
 }
 
 Engine.visible = function(x, y) {
