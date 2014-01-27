@@ -18,7 +18,7 @@ function Player(x,y) {
     // Spawns a Player at x,y
     this.x = x;
     this.y = y;
-    this.size = SPRITE_SIZE;
+    this.size = SPRITE_SIZE-2;
     this.aggression = 0;
     this.killz = 0;
     this.lives = 3;
@@ -115,13 +115,13 @@ function Player(x,y) {
     }
 
     this.onTouchEnemy = function() {
-        this.loseHealth(2);
+        this.loseHealth(1.5);
     }
 
     this.onTouchExplosion = function() {
-        this.loseHealth(10);
+        this.loseHealth(7);
     }
     this.onTouchBullet = function() {
-        this.loseHealth(5);
+        this.loseHealth(4);
     }
 }

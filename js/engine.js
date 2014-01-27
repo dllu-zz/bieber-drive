@@ -1,5 +1,5 @@
 
-var SPRITE_SIZE = 8;
+var SPRITE_SIZE = 7;
 var GRENADE_SIZE = 5;
 var BULLET_SIZE = 2;
 var SPRITE_SPEED_MULTIPLIER = 2;
@@ -101,8 +101,8 @@ Engine.update = function() {
         // kill all NPCs which are in the explosion
         for(var j=0, _j=Engine.npc.length; j<_j; j++) {
             if(Engine.npc[j].alive && VisibilityPolygon.inPolygon([Engine.npc[j].x, Engine.npc[j].y], Engine.explosions[i].poly)) {
-                Engine.npc[j].stunned = 200;
-                Engine.player.aggression+=0.1;
+                Engine.npc[j].stunned = 230;
+                Engine.player.aggression+=0.05;
             }
         }
         // Remove health of player
