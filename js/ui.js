@@ -80,6 +80,16 @@ $(document).keyup(function(event) {
 			// Down
 			Engine.player.flag_down = false;
 			break;
+		case 80:
+			// Pause
+			Engine.pause = !Engine.pause
+			if (Engine.pause) {
+				$("#pause").text("Paused");
+			}
+			else {
+				$("#pause").text("");
+			}
+			break;
 		default:
 			switch (event.which) {
 				case 69: // 'e'

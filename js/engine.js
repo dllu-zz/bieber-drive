@@ -2,7 +2,7 @@
 var SPRITE_SIZE = 7;
 var GRENADE_SIZE = 5;
 var BULLET_SIZE = 2;
-var SPRITE_SPEED_MULTIPLIER = 2;
+var SPRITE_SPEED_MULTIPLIER = 2.5;
 var PARTICLE_SIZE = 3;
 
 var requestAnimFrame = 
@@ -28,7 +28,7 @@ Engine.update = function() {
     // request the next update cycle
     requestAnimFrame(Engine.update);
     // check if engine is running
-    if(!Engine.running) return;
+    if(!Engine.running || Engine.pause) return;
     // update the player
     Engine.player.update();
 
@@ -142,6 +142,8 @@ Engine.init = function() {
     Engine.width = 1000;
     Engine.height = 600;
 
+    Engine.pause = false;
+
     /* I treat all devices as being Hi-DPI (i.e. a pixel ratio of 2)
     because even on normal displays, this looks better as it is like
     anti-aliasing. */
@@ -179,14 +181,14 @@ Engine.showMessage = function (i, texts, callback) {
         $('#message').html(texts[i]);
         setTimeout(function() {
             Engine.showMessage(i+1, texts, callback);
-        }, 3000);
+        }, 2000);
     }
     else {
         setTimeout(function() {
             $('#message').css({'display': 'none'});
             //$('#bottom-ui').css({'display': 'block'});
             callback();
-         }, 3000);
+         }, 2000);
     }
     /*window.setTimeout(function(){
         Engine.$viewport.css({'display':'block'});
@@ -207,7 +209,7 @@ Engine.level = function(n) {
         Engine.$viewport.css({'display':'none'});
         Engine.$player.css({'display':'none'});
         Engine.running = false;
-        Engine.showMessage(0,["In the end, the only person who can save you...", "... is yourself...", "You have found salvation."],function(){Engine.running = false;});
+        Engine.showMessage(0,["In the end, the only person who can save you...", "... is yourself.", "You have found salvation."],function(){Engine.running = false;});
         return;
     }
 
@@ -217,7 +219,7 @@ Engine.level = function(n) {
         Engine.$viewport.css({'display':'none'});
         Engine.$player.css({'display':'none'});
         Engine.running = false;
-        Engine.showMessage(0,["Welcome to the end...", "GAME OVER"],function(){Engine.running = false;});
+        Engine.showMessage(0,["You have fallen on the road to salvation.", "GAME OVER<br><br>(Reload this page to restart)"],function(){Engine.running = false;});
         return;
     }
 
@@ -231,6 +233,8 @@ Engine.level = function(n) {
         level_text = levels[n].title;
     }
     $('#announce').text(level_text);
+    $('#level').text(level_text);
+
     //$('#level').text(n+1);
     window.setTimeout(function(){
         Engine.$viewport.css({'display':'block'});

@@ -29,9 +29,9 @@ body {
 
 #message {
 	width: 1000px;
-	height: 600px;
+	height: 400px;
 	position: absolute;
-	top: 0px;
+	top: 200px;
 	left: 0px;
 	line-height: 80px;
 	text-align: center;
@@ -76,15 +76,31 @@ body {
 	right: 5px;
 	font-size: 20px;
 	color: #ccc;
+	text-align: right;
+}
+
+#level {
+	position: absolute;
+	bottom: 0px;
+	left: 5px;
+	color: #ccc;
+	font-size: 16px;
 }
 
 #instructions {
 	position: absolute;
 	bottom: 0px;
-	left: 250px;
+	left: 200px;
 	color: #ccc;
 }
 
+#pause {
+	position: absolute;
+	bottom: 0px;
+	right: 5px;
+	color: #ccc;
+	font-size: 16px;
+}
 
 #lives {
 	position: absolute;
