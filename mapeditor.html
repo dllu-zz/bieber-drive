@@ -16,6 +16,7 @@ var mode = 0;
 // 1: place player
 // 2: add npc
 // 3: place goal
+// 4: remove npc
 $(document).ready(function(){
   Engine.init()
 });
@@ -70,6 +71,14 @@ Engine.init = function() {
                 Engine.npc.push([x,y]); break;
             case 3:
                 Engine.goal.x = x, Engine.goal.y = y; break;
+            case 4:
+                Engine.npc = Engine.npc.filter(function(npc, ind, arr) {
+                    var dx = this[0] - npc[0];
+                    var dy = this[1] - npc[1];
+                    var dist = Math.sqrt(dx*dx + dy*dy);
+                    return dist > 5;                                                                                              
+                }, [x,y]);
+                break;
         }
         var hmm = JSON.stringify({
             poly:Engine.poly, start:[Engine.player.x, Engine.player.y], goal:[Engine.goal.x, Engine.goal.y], npc:Engine.npc
@@ -97,6 +106,7 @@ Engine.init = function() {
             case 88: mode = 1; break;
             case 67: mode = 2; break;
             case 86: mode = 3; break;
+            case 82: mode = 4; break;
             case 66: 
                 history.pop();
                 Engine.load(history[history.length-1]);
@@ -177,7 +187,7 @@ Engine.draw = function() {
   </head>
   <body>
     <canvas id="viewport">Use a better browser thx.</canvas>
-    <p style="margin-top:620px; color: #eee">z: draw polygon; x: place player; c: add npc; v: place goal; b: undo</p>
+    <p style="margin-top:620px; color: #eee">z: draw polygon; x: place player; c: add npc; r: remove npc; v: place goal; b: undo</p>
     <textarea id="levelcode" style="font-size: 15px; margin-top: 20px; /*color: #3f3;*/ width: 1000px;"></textarea>
     <button id="loadbutton">Load!</button>
   </body>
