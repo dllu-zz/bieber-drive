@@ -30,7 +30,7 @@ Engine.load = function(s) {
     Engine.goal.y = hmm.goal[1];
     Engine.npc = hmm.npc;
     Engine.segs = VisibilityPolygon.convertToSegments(Engine.poly);
-    $('#levelcode').text(s);
+    $('#levelcode').val(s);
 }
 Engine.init = function() {
     // set up the canvas
@@ -74,7 +74,7 @@ Engine.init = function() {
         var hmm = JSON.stringify({
             poly:Engine.poly, start:[Engine.player.x, Engine.player.y], goal:[Engine.goal.x, Engine.goal.y], npc:Engine.npc
         });
-        $('#levelcode').text(hmm)
+        $('#levelcode').val(hmm);
         history.push(hmm);
     });
     Engine.$viewport.mousemove(function(event) {
@@ -103,6 +103,9 @@ Engine.init = function() {
                 break;
         }
     });
+    $("#loadbutton").click(function(event) {
+        Engine.load($("#levelcode").val());
+    });
     Engine.draw();
 }
 
@@ -114,14 +117,16 @@ Engine.draw = function() {
     Engine.ctx.fill();
     // draw the world
     // draw the first polygon
-    var polygon = Engine.poly[0];
-    Engine.ctx.beginPath();
-    Engine.ctx.moveTo(polygon[0][0], polygon[0][1]);
-    for(var k=1, l=polygon.length; k<l; k++) {
-        Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
+    if (Engine.poly.length > 0 && Engine.poly[0].length > 0) {
+        var polygon = Engine.poly[0];
+        Engine.ctx.beginPath();
+        Engine.ctx.moveTo(polygon[0][0], polygon[0][1]);
+        for(var k=1, l=polygon.length; k<l; k++) {
+            Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
+        }
+        Engine.ctx.fillStyle = '#888';
+        Engine.ctx.fill();
     }
-    Engine.ctx.fillStyle = '#888';
-    Engine.ctx.fill();
     // draw the other polygons
     for(var i=1, j=Engine.poly.length; i<j; i++) {
         var polygon = Engine.poly[i];
@@ -143,13 +148,15 @@ Engine.draw = function() {
     // draw each explosions
     for(var i=0, _i=Engine.explosions.length; i<_i; i++) {
         var polygon = Engine.explosions[i];
-        Engine.ctx.beginPath();
-        Engine.ctx.moveTo(polygon[0][0], polygon[0][1]);
-        for(var k=1, l=polygon.length; k<l; k++) {
-            Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
+        if (polygon.length > 0) {
+            Engine.ctx.beginPath();
+            Engine.ctx.moveTo(polygon[0][0], polygon[0][1]);
+            for(var k=1, l=polygon.length; k<l; k++) {
+                Engine.ctx.lineTo(polygon[k][0], polygon[k][1]);
+            }
+            Engine.ctx.fillStyle = 'rgba(255,255,0,0.3)';
+            Engine.ctx.fill();
         }
-        Engine.ctx.fillStyle = 'rgba(255,255,0,0.3)';
-        Engine.ctx.fill();
     }
     // draw npcs
     for(var i=0, _i=Engine.npc.length; i<_i; i++) {
@@ -171,6 +178,7 @@ Engine.draw = function() {
   <body>
     <canvas id="viewport">Use a better browser thx.</canvas>
     <p style="margin-top:620px; color: #eee">z: draw polygon; x: place player; c: add npc; v: place goal; b: undo</p>
-    <pre id="levelcode" style="margin-top: 20px; color: #3f3; width: 1000px;"></pre>
+    <textarea id="levelcode" style="font-size: 15px; margin-top: 20px; /*color: #3f3;*/ width: 1000px;"></textarea>
+    <button id="loadbutton">Load!</button>
   </body>
 </html>
